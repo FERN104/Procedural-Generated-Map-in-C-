@@ -1,0 +1,1 @@
+﻿global using static Raylib_cs.Raylib;
