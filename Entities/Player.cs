@@ -25,6 +25,7 @@ public partial class Player : Entity
         
         //Change starting position values
         globalPhysics.position = new Vector2(100, 100);
+        globalPhysics.speed = 1f;
     }
 
     public override void update()

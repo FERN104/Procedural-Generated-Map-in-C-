@@ -16,6 +16,7 @@ public struct GlobalPhysics
     public Vector2 position;
     public Vector2 velocity;
     public float rotation;
+    public float speed;
 }
 
 public struct TextureVars
