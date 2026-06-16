@@ -8,6 +8,7 @@ public partial class Player : Entity
 {
     private Cooldown animTimer;
     private bool isMoving = true;
+    Vector2 targetpos = Vector2.Zero;
     public Player()
     {
         // Load all textures on initialisaton
@@ -25,7 +26,7 @@ public partial class Player : Entity
         
         //Change starting position values
         globalPhysics.position = new Vector2(100, 100);
-        globalPhysics.speed = 1f;
+        globalPhysics.speed = 5f;
     }
 
     public override void update()
