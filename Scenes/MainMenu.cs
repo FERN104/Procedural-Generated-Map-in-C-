@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Cs_raylib_test.Engine_Tools;
 using Cs_raylib_test.UI_Elements;
 using Raylib_cs;
 
@@ -35,6 +36,6 @@ public class MainMenu : Scene
 
     public override void Dispose()
     {
-        
+        TextureManager.UnloadTextCache();
     }
 }

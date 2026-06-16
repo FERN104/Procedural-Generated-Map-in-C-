@@ -1,4 +1,6 @@
-﻿using Cs_raylib_test.UI_Elements;
+﻿using Cs_raylib_test.Engine_Tools;
+using Cs_raylib_test.Entities;
+using Cs_raylib_test.UI_Elements;
 using Raylib_cs;
 
 namespace Cs_raylib_test.Scenes;
@@ -10,11 +12,18 @@ public class GameScreen : Scene
     private Buttons resume;
     private Buttons pause;
 
+    private Player player;
+
     public GameScreen()
     {
+        /* Menu Objects */
         this.resume = new Buttons("Resume", (int)(GetScreenCenter().X) - 250, (int)(GetScreenCenter().Y-150), 500, 200, Color.White, 100);
         this.menu = new Buttons("Menu", (int)(GetScreenCenter().X) - 250, (int)(GetScreenCenter().Y+150), 500, 200, Color.White, 100);
         this.pause = new Buttons("Pause", GetScreenWidth()-130, 30, 100, 50, Color.White, 20);
+        
+        /* Game Objects */
+        player = new Player();
+        
     }
     public override SceneSwitch update()
     {
@@ -25,9 +34,7 @@ public class GameScreen : Scene
 
         if (!isPaused)
         {
-            
-            if (IsKeyPressed(KeyboardKey.Enter)) return SceneSwitch.MAIN_MENU;
-            
+            player.update();   
             pause.update();
             if (pause.getIsClicked())
             {
@@ -57,6 +64,7 @@ public class GameScreen : Scene
 
     public override void draw()
     {
+        player.draw();
         pause.draw();
         
         if (isPaused)
@@ -69,6 +77,6 @@ public class GameScreen : Scene
 
     public override void Dispose()
     {
-        
+        TextureManager.UnloadTextCache();
     }
 }
