@@ -32,4 +32,9 @@ public class MainMenu : Scene
         play.draw();
         quit.draw();
     }
+
+    public override void Dispose()
+    {
+        
+    }
 }

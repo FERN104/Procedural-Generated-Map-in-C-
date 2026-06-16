@@ -66,4 +66,9 @@ public class GameScreen : Scene
             resume.draw();
         }
     }
+
+    public override void Dispose()
+    {
+        
+    }
 }
