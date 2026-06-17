@@ -5,8 +5,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-
-        <!-- Paste these 4 lines here to drop from 50MB to ~5MB -->
+        
         <PublishAot>true</PublishAot>
         <PublishTrimmed>true</PublishTrimmed>
         <TrimMode>link</TrimMode>
@@ -18,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Assets\WizardSpriteSheet.png">
+      <None Update="Assets\**//*.*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

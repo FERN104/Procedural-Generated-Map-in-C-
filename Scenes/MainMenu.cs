@@ -8,13 +8,13 @@ namespace Cs_raylib_test.Scenes;
 public class MainMenu : Scene
 {
     private Vector2 center = GetScreenCenter();
-    private Buttons play;
+    private TexturedButton play;
     private Buttons quit;
     
     public MainMenu()
     {
         this.quit = new Buttons("Quit", (int)center.X - 500/2, (int)center.Y + 150, 500, 200, Color.White, 100);
-       this.play = new Buttons("Play", (int)center.X - 500/2, (int)center.Y - 150, 500, 200, Color.White, 100);
+       this.play = new TexturedButton("Assets/Play.png", "Assets/ClickedPlay.png", new Rectangle(center.X - 500/2, center.Y - 150, 500, 200));
     }
     public override SceneSwitch update()
     {

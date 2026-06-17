@@ -8,7 +8,7 @@ namespace Cs_raylib_test.Scenes;
 public class GameScreen : Scene
 {
     private bool isPaused = false;
-    private Buttons menu;
+    private TexturedButton menu;
     private Buttons resume;
     private Buttons pause;
 
@@ -18,7 +18,8 @@ public class GameScreen : Scene
     {
         /* Menu Objects */
         this.resume = new Buttons("Resume", (int)(GetScreenCenter().X) - 250, (int)(GetScreenCenter().Y-150), 500, 200, Color.White, 100);
-        this.menu = new Buttons("Menu", (int)(GetScreenCenter().X) - 250, (int)(GetScreenCenter().Y+150), 500, 200, Color.White, 100);
+        this.menu = new TexturedButton("Assets/Menu.png", "Assets/ClickedMenu.png",
+            new Rectangle(GetScreenCenter().X - 250, GetScreenCenter().Y + 150, 500, 200));
         this.pause = new Buttons("Pause", GetScreenWidth()-130, 30, 100, 50, Color.White, 20);
         
         /* Game Objects */
