@@ -8,7 +8,10 @@ public class CharacterInput
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public KeyboardKey fireball { get; set; }
-
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public KeyboardKey Firebeam { get; set; }
+    
     public CharacterInput()
     {
         move = MouseButton.Left;

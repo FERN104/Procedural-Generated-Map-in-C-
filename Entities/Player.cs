@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.JavaScript;
 using Raylib_cs;
 using Cs_raylib_test.Engine_Tools;
 namespace Cs_raylib_test.Entities;
@@ -34,6 +35,7 @@ public partial class Player : Entity
     public override void update()
     {
         PlayerMovement();
+        if (GetKeyPressed() != 0) SpellCaster[(KeyboardKey)GetKeyPressed()]();
         AnimationLoop();
     }
 
