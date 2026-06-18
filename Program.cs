@@ -1,5 +1,6 @@
 ﻿using Raylib_cs;
 using Cs_raylib_test.Scenes;
+using Cs_raylib_test.Settings;
 
 namespace Cs_raylib_test;
 public enum SceneSwitch {                                                               // An enum is like a category
@@ -18,8 +19,10 @@ class MainClass
     
     static void Main(string[] args)                                                     // This is the programs starting point
     {
-        InitWindow(800, 1200, "C# Raylib Test");                        // This is where I use the 'Raylib' framework to create a window
-        ToggleBorderlessWindowed();                                                     // This puts the window into borderless fullscreen
+        SettingsManager.singleInstance.LoadSettings();
+        InitWindow(800, 600, "C# Raylib Test");                         // This is where I use the 'Raylib' framework to create a window
+        if (SettingsManager.singleInstance.gameSettings.isFullscreen) ToggleFullscreen();   // This puts the window into borderless fullscreen if the settings file says fullscreen
+        else ToggleBorderlessWindowed();
         
         SetTargetFPS(60);                                                               // Limiting the framerate to 60 frames per second
         SetExitKey(KeyboardKey.Null);                                                   // The framework has the escape key as the default program exit key, so I disabled it
@@ -45,7 +48,7 @@ class MainClass
             
             EndDrawing();                                                               // Stop Drawing mode
         }
-        
+        SettingsManager.singleInstance.SaveSettings();
         CloseWindow();                                                                  // This is outside of the loop and only runs if the program breaks the loop
     }
 }

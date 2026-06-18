@@ -6,8 +6,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         
-        <PublishAot>true</PublishAot>
-        <PublishTrimmed>true</PublishTrimmed>
         <TrimMode>link</TrimMode>
         <OptimizationPreference>Size</OptimizationPreference>
     </PropertyGroup>
@@ -20,6 +18,10 @@
       <None Update="Assets\**//*.*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Spells\" />
     </ItemGroup>
 
 </Project>

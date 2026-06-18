@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Cs_raylib_test.Settings;
 using Raylib_cs;
 
 namespace Cs_raylib_test.Entities;
@@ -15,7 +16,7 @@ public partial class Player : Entity
             Vector2 mouspos = GetMousePosition();
             
             // Movement
-            if (IsMouseButtonDown(MouseButton.Left)) targetpos = mouspos;                                               // Update the mouse position in the target pos Vector
+            if (IsMouseButtonDown(SettingsManager.singleInstance.gameSettings.controls.move)) targetpos = mouspos;      // Update the mouse position in the target pos Vector
                                                                                                                         // Only do this when holding left-click
             // Normalise Vector to give pure direction
             float dx = (targetpos.X - globalPhysics.position.X);                                                        // Redefine with target position to keep going to clicked location

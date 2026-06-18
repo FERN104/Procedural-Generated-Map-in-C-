@@ -7,8 +7,10 @@ namespace Cs_raylib_test.Entities;
 public partial class Player : Entity
 {
     private Cooldown animTimer;
-    private bool isMoving = true;
     Vector2 targetpos = Vector2.Zero;
+    Vector2 intitSpellVel = Vector2.Zero;
+    private bool isMoving = true;
+
     public Player()
     {
         // Load all textures on initialisaton
