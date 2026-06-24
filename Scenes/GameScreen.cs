@@ -1,5 +1,6 @@
 ﻿using Cs_raylib_test.Engine_Tools;
 using Cs_raylib_test.Entities;
+using Cs_raylib_test.Spell;
 using Cs_raylib_test.UI_Elements;
 using Raylib_cs;
 
@@ -35,7 +36,8 @@ public class GameScreen : Scene
 
         if (!isPaused)
         {
-            player.update();   
+            SpellManager.Instance.update(player);
+            player.update();
             pause.update();
             if (pause.getIsClicked())
             {
@@ -59,7 +61,6 @@ public class GameScreen : Scene
                 resume.setIsClicked(false);
             }
         }
-
         return SceneSwitch.GAME_SCREEN;
     }
 
@@ -67,7 +68,7 @@ public class GameScreen : Scene
     {
         player.draw();
         pause.draw();
-        
+        SpellManager.Instance.draw();
         if (isPaused)
         {
             DrawText("Game Paused", (int)(GetScreenCenter().X - MeasureText("Game Paused", 100)/2), 100, 100, Color.Red);
@@ -79,5 +80,6 @@ public class GameScreen : Scene
     public override void Dispose()
     {
         TextureManager.UnloadTextCache();
+        SpellManager.Instance.Dispose();
     }
 }

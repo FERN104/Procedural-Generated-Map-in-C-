@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.JavaScript;
 using Raylib_cs;
 using Cs_raylib_test.Engine_Tools;
+using Cs_raylib_test.Settings;
+
 namespace Cs_raylib_test.Entities;
 
 public partial class Player : Entity
@@ -11,7 +13,9 @@ public partial class Player : Entity
     Vector2 targetpos = Vector2.Zero;
     Vector2 intitSpellVel = Vector2.Zero;
     private bool isMoving = true;
-
+    private Vector2 SpellDirection = Vector2.Zero;
+    private List<Spell.Spell> spells;
+    
     public Player()
     {
         // Load all textures on initialisaton
@@ -30,12 +34,13 @@ public partial class Player : Entity
         //Change starting position values
         globalPhysics.position = new Vector2(100, 100);
         globalPhysics.speed = 5f;
+
+        spells = new List<Spell.Spell>();
     }
 
     public override void update()
     {
         PlayerMovement();
-        if (GetKeyPressed() != 0) SpellCaster[(KeyboardKey)GetKeyPressed()]();
         AnimationLoop();
     }
 
@@ -49,4 +54,6 @@ public partial class Player : Entity
             globalPhysics.rotation,
             Color.White);
     }
+
+    public Vector2[] getSpellInfo() { return new[] { SpellDirection, globalPhysics.position }; }
 }

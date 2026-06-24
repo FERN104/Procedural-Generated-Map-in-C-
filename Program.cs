@@ -21,8 +21,8 @@ class MainClass
     {
         SettingsManager.singleInstance.LoadSettings();
         InitWindow(800, 600, "C# Raylib Test");                         // This is where I use the 'Raylib' framework to create a window
-        if (SettingsManager.singleInstance.gameSettings.isFullscreen) ToggleFullscreen();   // This puts the window into borderless fullscreen if the settings file says fullscreen
-        else ToggleBorderlessWindowed();
+        //if (SettingsManager.singleInstance.gameSettings.isFullscreen) ToggleFullscreen();   // This puts the window into borderless fullscreen if the settings file says fullscreen
+        //else ToggleBorderlessWindowed();
         
         SetTargetFPS(60);                                                               // Limiting the framerate to 60 frames per second
         SetExitKey(KeyboardKey.Null);                                                   // The framework has the escape key as the default program exit key, so I disabled it
