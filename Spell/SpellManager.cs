@@ -19,13 +19,10 @@ public class SpellManager
         spellPool = new Stack<Spell>();
     }
 
-    private static Dictionary<KeyboardKey, Func<Vector2, Vector2, Spell>> SpellCaster = new()
+    private static Dictionary<KeyboardKey, Func<Spell>> SpellCaster = new()
     {
-        {
-            SettingsManager.singleInstance.gameSettings.controls.fireball,
-            (direction, position) => new Fireball(direction, position)
-        },
-        { SettingsManager.singleInstance.gameSettings.controls.Firebeam, (direction, position) => new FireBeam() },
+        { SettingsManager.singleInstance.gameSettings.controls.fireball, () => new Fireball() },
+        { SettingsManager.singleInstance.gameSettings.controls.Firebeam, () => new FireBeam() },
     };
 
     public void update(Player player)
@@ -36,7 +33,7 @@ public class SpellManager
             Vector2[] spellinfo = player.getSpellInfo();
             Spell spell = spellPool.Count > 0
                 ? spellPool.Pop()
-                : func(spellinfo[0], spellinfo[1]);
+                : func();
             spell.Reset(spellinfo[0], spellinfo[1]);
             activeSpells.Add(spell);
         }

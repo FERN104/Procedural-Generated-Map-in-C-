@@ -11,17 +11,8 @@ public class Fireball : Spell
     private Vector2 position;
     private Vector2 velocity;
     private float speed = 100f;
-    private float rotationAngle;
-    private float radius = 10f;
+    private float radius = 5f;
     private float range = 400f;
-    
-    public Fireball (Vector2 direction, Vector2 pos){
-        this.position = pos;
-        this.startpos = pos;
-        this.velocity = direction * speed;
-        //this.fireballTexture = TextureManager.loadPathtoText("Assets/fireball.png", 50, 50);
-        
-    }
 
     public override void update()
     {
@@ -41,6 +32,7 @@ public class Fireball : Spell
     public override void Reset(Vector2 dir, Vector2 pos)
     {
         base.Reset(dir, pos);
+        startpos = pos;
         velocity = dir * speed;
         position = pos;
     }

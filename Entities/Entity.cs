@@ -42,4 +42,9 @@ public abstract class Entity
 
     public abstract void draw();
     public abstract void update();
+
+    public virtual Rectangle getRectangle()
+    {
+        return new Rectangle(this.globalPhysics.position.X, globalPhysics.position.Y, textureVars.frameDimensions.X, textureVars.frameDimensions.Y);
+    }
 }
