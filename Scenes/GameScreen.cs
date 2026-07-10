@@ -1,5 +1,6 @@
 ﻿using Cs_raylib_test.Engine_Tools;
 using Cs_raylib_test.Entities;
+using Cs_raylib_test.MapLogic;
 using Cs_raylib_test.Spell;
 using Cs_raylib_test.UI_Elements;
 using Raylib_cs;
@@ -14,9 +15,14 @@ public class GameScreen : Scene
     private Buttons pause;
 
     private Player player;
-
+    MapGrids grid;
+    
+    List<Entity> entities;
+    
     public GameScreen()
     {
+        entities = new List<Entity>(); // Initialise the list
+        
         /* Menu Objects */
         this.resume = new Buttons("Resume", (int)(GetScreenCenter().X) - 250, (int)(GetScreenCenter().Y-150), 500, 200, Color.White, 100);
         this.menu = new TexturedButton("Assets/Menu.png", "Assets/ClickedMenu.png",
@@ -25,8 +31,13 @@ public class GameScreen : Scene
         
         /* Game Objects */
         player = new Player();
+        entities.Add(player); // Add the player object so the map knows it exists
         
+        /* Map */
+        grid = new MapGrids(1920, 1080, 32); // Create The grid the map is on
+
     }
+    
     public override SceneSwitch update()
     {
         if (IsKeyPressed(KeyboardKey.Escape))
@@ -44,6 +55,8 @@ public class GameScreen : Scene
                 isPaused = true;
                 pause.setIsClicked(false);
             }
+            
+            grid.UpdateCells(entities); // While the game is active update the map grid
         }
         else
         {

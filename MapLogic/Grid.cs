@@ -6,13 +6,15 @@ namespace Cs_raylib_test.MapLogic;
 
 public class GridCell
 {
-    public Vector2 position;
+    public Vector2 Position;
     public bool Walkable;
-    public List<Entity> current_entities;
+    public char Code;
+    public List<Entity> Current_Entities;
     public GridCell(Vector2 pos) {
-        position = pos;
+        Position = pos;
         Walkable = true;
-        current_entities = new List<Entity>();
+        Current_Entities = new List<Entity>();
+        Code = '.';
     }
 }
 
@@ -20,20 +22,34 @@ public class MapGrids
 {
     public readonly int mapWidth;
     public readonly int mapHeight;
+    
     public readonly float cellSize;
-    HashSet<GridCell> dirtyCells;
+    private readonly int cols;
+    private readonly int rows;
+    
+    private HashSet<GridCell> dirtyCells;
     private GridCell[,] grid;
-
+    private List<MapObject> staticMap;
+    
     public MapGrids(int width, int height, float cellSize)
     {
+        staticMap = new List<MapObject>();
         mapWidth = width;
         mapHeight = height;
         this.cellSize = cellSize;
-        grid = new GridCell[mapWidth, mapHeight];
         
-        for (int x = 0; x < mapWidth; x++)
-            for (int y = 0; y < mapHeight; y++)
+        cols = (int)(mapWidth / cellSize);
+        rows = (int)(mapHeight / cellSize);
+        
+        grid = new GridCell[cols, rows];
+        
+        for (int x = 0; x < cols; x++)
+            for (int y = 0; y < rows; y++)
                  grid[x, y] = new GridCell(new Vector2(x * cellSize, y * cellSize));
+        
+        GeneratorAlgorithm();
+        LoadMap();
+        
         dirtyCells = new HashSet<GridCell>();
     }
 
@@ -55,10 +71,10 @@ public class MapGrids
         float maxX = rect.X + rect.Width-1;
         float maxY = rect.Y + rect.Height-1;
         
-        int startX = Math.Clamp((int)(minX/cellSize), 0, mapWidth - 1);
-        int startY = Math.Clamp((int)(minY / cellSize), 0, mapHeight - 1);
-        int endX = Math.Clamp((int)(maxX / cellSize), 0, mapWidth - 1);
-        int endY = Math.Clamp((int)(maxY/cellSize), 0, mapHeight - 1);
+        int startX = Math.Clamp((int)(minX/cellSize), 0, cols- 1);
+        int startY = Math.Clamp((int)(minY / cellSize), 0, rows - 1);
+        int endX = Math.Clamp((int)(maxX / cellSize), 0, cols - 1);
+        int endY = Math.Clamp((int)(maxY/cellSize), 0, rows - 1);
         
         for (int x = startX; x <= endX; x++)
             for (int y = startY; y <= endY; y++)
@@ -70,7 +86,7 @@ public class MapGrids
     {
         foreach (GridCell cell in dirtyCells)
         {
-            cell.current_entities.Clear();
+            cell.Current_Entities.Clear();
         }
         dirtyCells.Clear();
 
@@ -79,9 +95,49 @@ public class MapGrids
             Rectangle rect = entity.getRectangle();
             foreach (GridCell cell in GetCellsAtRect(rect))
             {
-                cell.current_entities.Add(entity);
+                cell.Current_Entities.Add(entity);
                 dirtyCells.Add(cell);
             }
         }
+
+        foreach (MapObject obj in staticMap)
+        {
+            obj.Draw();
+        }
     }
+
+    private void GeneratorAlgorithm()
+    {
+        for (int x = 0; x < cols; x++)
+        {
+            for (int y = 0; y < rows; y++)
+            {
+                if (y == 0 || x == 0 || x == mapWidth - 1 || y == mapHeight - 1)
+                {
+                    grid[x, y].Walkable = false;
+                    grid[x, y].Code = '#';
+                    continue;
+                }
+                grid[x, y].Walkable = true;
+                grid[x, y].Code = '.';
+            }
+        }
+    }
+
+    private void LoadMap()
+    {
+        foreach (GridCell cell in grid)
+        {
+            var obj = decodeSymbol[cell.Code](new Rectangle(cell.Position.X, cell.Position.Y, cellSize, cellSize));
+            if (obj == null) continue;
+            staticMap.Add(obj);
+        }
+    }
+
+    private Dictionary<char, Func<Rectangle, MapObject?>> decodeSymbol = new() // Single character instead of string to save memory
+    {
+        {'#', (rect) => new Wall(rect)},
+        {'*', (rect) => new Wall(rect)},
+        {'.', (rect) => null},
+    };
 }
