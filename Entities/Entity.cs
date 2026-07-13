@@ -38,10 +38,11 @@ public abstract class Entity
     protected GlobalPhysics globalPhysics;
     protected TextureVars textureVars;
 
-    public GlobalStats getGlobalStats() { return globalStats; }
-
+    public ref GlobalStats getGlobalStats() { return ref globalStats; }
+    public ref GlobalPhysics getGlobalPhysics() { return ref globalPhysics; }
     public abstract void draw();
-    public abstract void update();
+
+    public abstract void update(Vector2 mousePos);
 
     public virtual Rectangle getRectangle()
     {

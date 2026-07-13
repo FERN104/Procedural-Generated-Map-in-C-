@@ -18,7 +18,7 @@ public class GridCell
     }
 }
 
-public class MapGrids
+public partial class MapGrids
 {
     public readonly int mapWidth;
     public readonly int mapHeight;
@@ -30,6 +30,9 @@ public class MapGrids
     private HashSet<GridCell> dirtyCells;
     private GridCell[,] grid;
     private List<MapObject> staticMap;
+    
+    //Map Gen Chances
+    private float emptyChance = 0.45f;
     
     public MapGrids(int width, int height, float cellSize)
     {
@@ -47,7 +50,7 @@ public class MapGrids
             for (int y = 0; y < rows; y++)
                  grid[x, y] = new GridCell(new Vector2(x * cellSize, y * cellSize));
         
-        GeneratorAlgorithm();
+        GeneratorAlgorithm(this.emptyChance);
         LoadMap();
         
         dirtyCells = new HashSet<GridCell>();
@@ -99,28 +102,13 @@ public class MapGrids
                 dirtyCells.Add(cell);
             }
         }
+    }
 
+    public void Draw()
+    {
         foreach (MapObject obj in staticMap)
         {
             obj.Draw();
-        }
-    }
-
-    private void GeneratorAlgorithm()
-    {
-        for (int x = 0; x < cols; x++)
-        {
-            for (int y = 0; y < rows; y++)
-            {
-                if (y == 0 || x == 0 || x == mapWidth - 1 || y == mapHeight - 1)
-                {
-                    grid[x, y].Walkable = false;
-                    grid[x, y].Code = '#';
-                    continue;
-                }
-                grid[x, y].Walkable = true;
-                grid[x, y].Code = '.';
-            }
         }
     }
 

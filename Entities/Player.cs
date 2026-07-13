@@ -38,9 +38,9 @@ public partial class Player : Entity
         spells = new List<Spell.Spell>();
     }
 
-    public override void update()
+    public override void update(Vector2 mousePos)
     {
-        PlayerMovement();
+        PlayerMovement(mousePos);
         AnimationLoop();
     }
 

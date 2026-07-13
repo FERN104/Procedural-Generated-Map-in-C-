@@ -1,4 +1,5 @@
-﻿using Cs_raylib_test.Engine_Tools;
+﻿using System.Numerics;
+using Cs_raylib_test.Engine_Tools;
 using Cs_raylib_test.Entities;
 using Cs_raylib_test.MapLogic;
 using Cs_raylib_test.Spell;
@@ -18,6 +19,8 @@ public class GameScreen : Scene
     MapGrids grid;
     
     List<Entity> entities;
+
+    private Camera2D camera;
     
     public GameScreen()
     {
@@ -33,13 +36,20 @@ public class GameScreen : Scene
         player = new Player();
         entities.Add(player); // Add the player object so the map knows it exists
         
+        camera = new Camera2D();
+        camera.Offset = new Vector2(GetScreenWidth()/2, GetScreenHeight()/2);
+        camera.Target = player.getGlobalPhysics().position;
+        camera.Zoom = 1f;
+        camera.Rotation = 0f;
+        
         /* Map */
-        grid = new MapGrids(1920, 1080, 32); // Create The grid the map is on
+        grid = new MapGrids(1920*3, 1080*3, 32); // Create The grid the map is on
 
     }
     
     public override SceneSwitch update()
     {
+        
         if (IsKeyPressed(KeyboardKey.Escape))
         {
             isPaused = !isPaused;
@@ -47,8 +57,10 @@ public class GameScreen : Scene
 
         if (!isPaused)
         {
+            camera.Target = player.getGlobalPhysics().position; //Smooth following
+            
+            player.update(GetScreenToWorld2D(GetMousePosition(), camera));
             SpellManager.Instance.update(player);
-            player.update();
             pause.update();
             if (pause.getIsClicked())
             {
@@ -79,9 +91,13 @@ public class GameScreen : Scene
 
     public override void draw()
     {
+        BeginMode2D(camera);
         player.draw();
-        pause.draw();
         SpellManager.Instance.draw();
+        grid.Draw();
+        EndMode2D();
+        
+        pause.draw();
         if (isPaused)
         {
             DrawText("Game Paused", (int)(GetScreenCenter().X - MeasureText("Game Paused", 100)/2), 100, 100, Color.Red);

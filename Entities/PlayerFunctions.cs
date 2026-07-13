@@ -9,18 +9,16 @@ namespace Cs_raylib_test.Entities;
 public partial class Player : Entity
 {
     
-    private void PlayerMovement()
+    private void PlayerMovement(Vector2 mousePos)
     {
         globalPhysics.position.X += globalPhysics.velocity.X;                                                           // Register velocity
         globalPhysics.position.Y += globalPhysics.velocity.Y;
 
-        globalPhysics.velocity = Vector2.Zero;                                                                          // Completely reset velocity to ensure it doesn't accelerate
-
-        Vector2 mouspos = GetMousePosition();
+        globalPhysics.velocity = Vector2.Zero;                                                                          // Completely reset velocity to ensure it doesn't accelerat
 
         // Movement
         if (IsMouseButtonDown(SettingsManager.singleInstance.gameSettings.controls.move))
-            targetpos = mouspos;                                                                                        // Update the mouse position in the target pos Vector
+            targetpos = mousePos;                                                                                        // Update the mouse position in the target pos Vector
                                                                                                                         // Only do this when holding left-click
                                                                                                                         // Normalise Vector to give pure direction
         float dx = (targetpos.X - globalPhysics.position.X);                                                            // Redefine with target position to keep going to clicked location
