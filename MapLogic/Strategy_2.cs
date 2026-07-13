@@ -71,6 +71,85 @@ public partial class MapGrids
 
             rooms.Add(room);
         }
+
+        for (int i = 0; i < roomAmount; i++)
+        {
+            //Basic setup to feed each room into the next
+            Vector2 a = rooms[i].gridPosition;
+            Vector2 b = (i + 1) < roomAmount ? rooms[i + 1].gridPosition : rooms[0].gridPosition; // Don't go over the array size
+            
+            CarveCorridors(a, b);
+        }
+    }
+    
+    
+    private void CarveCorridors(Vector2 a, Vector2 b)
+    {
+        // Heavily inspired by research on Bresenham's Line Algorithm
+        // Efficient due to only moving by single integers each frame (Bit Shifting)
+        // Removes the need for floating point inaccuracies and arithmetic
+        // Computors are notoriously less precise at dealing with decimals than integers
+        // Keeping everything as whole numbers is more precise and efficient
+        
+        
+        int x0 = (int)a.X;
+        int y0 = (int)a.Y;
+        int x1 = (int)b.X;
+        int y1 = (int)b.Y;
+        
+        int dx = Math.Abs(x1 - x0);
+        int dy = Math.Abs(y1 - y0);
+        
+        int moveX = x0 < x1 ? 1 : -1;
+        int moveY = y0 < y1 ? 1 : -1;
+        
+        
+        // err tracks deviation from an ideal straight line
+        // This variable keeps track of whether the next step should be horizontal or vertical
+        // Important for smooth shapes keeping a linear feel in a single line.
+
+        int err = dx - dy; // Tracks the true mathematicaly closest next cell
+
+        int lineThickness = 6;
+        
+        while (true) // Loop until break
+        {
+            if (x0 >= 0 && x0 < cols && y0 >= 0 && y0 < rows) // Carve the current cell with the safety check used in shapes to prevent out of bounds errors
+            {
+                // add thickness when carving the line so corridors are walkable
+                int th = lineThickness / 2;
+
+                for (int i = x0 - th; i < x0 + th; i++)
+                {
+                    for (int o = y0 - th; o < y0 + th; o++)
+                    {
+                        grid[i, o].Code = '.';
+                        grid[i, o].Walkable = true;
+                    }
+                }
+            }
+
+            if (x0 == x1 && y0 == y1) // Reached the other point so stop
+                break;
+            
+            int e2 = err * 2; // Doubling is done to keep everything in integer space removes floating point arithmetic
+            
+            
+            // This part is weighing which side needs to move this frame via the formulas
+            if (e2 > -dy)
+            {
+                err -= dy;
+                x0 += moveX;
+            }
+
+            if (e2 < dx)
+            {
+                err += dx;
+                y0 += moveY;
+            }
+            // this works because we check how for the line is drifting in each direction to decide what axis to move on
+        }
+
     }
 
     private void SquareRoom(ref Room room)

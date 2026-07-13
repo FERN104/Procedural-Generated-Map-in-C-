@@ -39,7 +39,7 @@ public class GameScreen : Scene
         camera = new Camera2D();
         camera.Offset = new Vector2(GetScreenWidth()/2, GetScreenHeight()/2);
         camera.Target = player.getGlobalPhysics().position;
-        camera.Zoom = 0.3f;
+        camera.Zoom = 1f;
         camera.Rotation = 0f;
         
         /* Map */
