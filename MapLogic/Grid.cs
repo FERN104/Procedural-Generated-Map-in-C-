@@ -14,7 +14,7 @@ public class GridCell
         Position = pos;
         Walkable = true;
         Current_Entities = new List<Entity>();
-        Code = '.';
+        Code = '#';
     }
 }
 
@@ -31,8 +31,8 @@ public partial class MapGrids
     private GridCell[,] grid;
     private List<MapObject> staticMap;
     
-    //Map Gen Chances
-    private float emptyChance = 0.45f;
+    //Choose Which strategy to load
+    private int strategy = 2;
     
     public MapGrids(int width, int height, float cellSize)
     {
@@ -49,8 +49,13 @@ public partial class MapGrids
         for (int x = 0; x < cols; x++)
             for (int y = 0; y < rows; y++)
                  grid[x, y] = new GridCell(new Vector2(x * cellSize, y * cellSize));
+
+        switch (strategy)
+        {
+            case 1: GeneratorAlgorithm(0.45f); break;
+            case 2: GraphGeneration(0.5f, 6); break;
+        }
         
-        GeneratorAlgorithm(this.emptyChance);
         LoadMap();
         
         dirtyCells = new HashSet<GridCell>();
