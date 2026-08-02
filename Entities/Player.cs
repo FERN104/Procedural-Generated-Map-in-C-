@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.JavaScript;
 using Raylib_cs;
 using Cs_raylib_test.Engine_Tools;
+using Cs_raylib_test.MapLogic;
 using Cs_raylib_test.Settings;
 
 namespace Cs_raylib_test.Entities;
@@ -16,7 +17,7 @@ public partial class Player : Entity
     private Vector2 SpellDirection = Vector2.Zero;
     private List<Spell.Spell> spells;
     
-    public Player()
+    public Player(MapGrids map) : base(map)
     {
         // Load all textures on initialisaton
         textureVars.spriteSheetSize = new Vector2(208, 216);
@@ -32,15 +33,15 @@ public partial class Player : Entity
         animTimer = new Cooldown(textureVars.frameTime);
         
         //Change starting position values
-        globalPhysics.position = new Vector2(100, 100);
-        globalPhysics.speed = 5f;
+        globalPhysics.position = map.findEmptyGrid(new Vector2(textureVars.frameRec.Width, textureVars.frameRec.Height));
+        globalPhysics.speed = 10f;
 
         spells = new List<Spell.Spell>();
     }
 
-    public override void update(Vector2 mousePos)
+    public override void update(Vector2 mousePos, MapGrids map)
     {
-        PlayerMovement(mousePos);
+        PlayerMovement(mousePos, map);
         AnimationLoop();
     }
 

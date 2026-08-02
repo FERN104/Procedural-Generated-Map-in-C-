@@ -33,14 +33,14 @@ public struct Room
 
 public partial class MapGrids
 {
-    private void GraphGeneration(float minPercentage, int roomAmount)
+    private void GraphGeneration(float minPercentage, int gridCount, float roomChance)
     {
         List<Room> rooms = new List<Room>();
         List<Rectangle> segments = new List<Rectangle>();
         
-        // Create Segments to place each room in
-        int segCols = (int)Math.Ceiling(Math.Sqrt(roomAmount));
-        int segRows = (int)Math.Ceiling((float)roomAmount / segCols);
+        // Create Segments for the gridCount
+        int segCols = (int)Math.Ceiling(Math.Sqrt(gridCount));
+        int segRows = (int)Math.Ceiling((float) gridCount / segCols);
         
         int segWidth = cols / segCols;
         int segHeight = rows / segRows;
@@ -57,8 +57,11 @@ public partial class MapGrids
             }
         }
 
-        for (int i = 0; i < roomAmount; i++)
+        for (int i = 0; i < segments.Count; i++)
         {
+            if (roomChance < Random.Shared.NextSingle())
+                continue;
+            
             Room room = new Room(minPercentage, segments[i]);
             
             // Draw the room based on the shape index
@@ -72,18 +75,19 @@ public partial class MapGrids
             rooms.Add(room);
         }
 
-        for (int i = 0; i < roomAmount; i++)
+        for (int i = 0; i < rooms.Count; i++)
         {
             //Basic setup to feed each room into the next
             Vector2 a = rooms[i].gridPosition;
-            Vector2 b = (i + 1) < roomAmount ? rooms[i + 1].gridPosition : rooms[0].gridPosition; // Don't go over the array size
+            Vector2 b = (i + 1) < rooms.Count ? rooms[i + 1].gridPosition : rooms[0].gridPosition; // Don't go over the array size
             
-            CarveCorridors(a, b);
+            //CarveCorridorsDiag(a, b);
+            carveCorridorL(a, b);
         }
     }
     
     
-    private void CarveCorridors(Vector2 a, Vector2 b)
+    private void CarveCorridorsDiag(Vector2 a, Vector2 b)
     {
         // Heavily inspired by research on Bresenham's Line Algorithm
         // Efficient due to only moving by single integers each frame (Bit Shifting)
@@ -150,6 +154,33 @@ public partial class MapGrids
             // this works because we check how for the line is drifting in each direction to decide what axis to move on
         }
 
+    }
+
+    public void carveCorridorL(Vector2 a, Vector2 b)
+    {
+        int aX =  (int)a.X;
+        int aY =  (int)a.Y;
+        int bX = (int)b.X;
+        int bY =  (int)b.Y;
+        
+        int dx = Math.Abs(aX - bX);
+        int dy = Math.Abs(aY - bY);
+        
+        
+        
+        for (int x = aX; x <= bX; x++)
+        {
+            int y = dx > dy ? aY : bY;
+            grid[x, y].Code = '.';
+            grid[x, y].Walkable = true;
+        }
+
+        for (int y = aY; y <= bY; y++)
+        {
+            int x = dx > dy ? bX : aX;
+            grid[x, y].Code = '.';
+            grid[x, y].Walkable = true;
+        }
     }
 
     private void SquareRoom(ref Room room)

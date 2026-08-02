@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
 using System.Runtime.CompilerServices;
+using Cs_raylib_test.MapLogic;
+using Cs_raylib_test.Physics;
 using Cs_raylib_test.Settings;
 using Cs_raylib_test.Spell;
 using Raylib_cs;
@@ -9,18 +11,16 @@ namespace Cs_raylib_test.Entities;
 public partial class Player : Entity
 {
     
-    private void PlayerMovement(Vector2 mousePos)
+    private void PlayerMovement(Vector2 mousePos, MapGrids map)
     {
-        globalPhysics.position.X += globalPhysics.velocity.X;                                                           // Register velocity
-        globalPhysics.position.Y += globalPhysics.velocity.Y;
-
-        globalPhysics.velocity = Vector2.Zero;                                                                          // Completely reset velocity to ensure it doesn't accelerat
+        globalPhysics.velocity = Vector2.Zero;                                                                          // Completely reset velocity to ensure it doesn't accelerate
 
         // Movement
         if (IsMouseButtonDown(SettingsManager.singleInstance.gameSettings.controls.move))
-            targetpos = mousePos;                                                                                        // Update the mouse position in the target pos Vector
-                                                                                                                        // Only do this when holding left-click
-                                                                                                                        // Normalise Vector to give pure direction
+            targetpos = mousePos;                                                                                   // Update the mouse position in the target pos Vector
+                                                                                                                    // Only do this when holding left-click
+
+        // Normalise Vector to give pure direction
         float dx = (targetpos.X - globalPhysics.position.X);                                                            // Redefine with target position to keep going to clicked location
         float dy = (targetpos.Y - globalPhysics.position.Y);
         float distance = (float)Math.Sqrt(dx * dx + dy * dy);                                                           // Find distance with Pythagoras theorem
@@ -36,12 +36,14 @@ public partial class Player : Entity
             globalPhysics.velocity.Y = (dy / distance) * globalPhysics.speed;                                           // Formula: Normalised = Vector / Magnitude
                                                                                                                         // Multiplying by speed then allows us to move the player along the vector
             // Collisions
-
+            CollisionManager.instance.CheckCollision(this);
+            
+            globalPhysics.position.X += globalPhysics.velocity.X;                                                           // Register velocity
+            globalPhysics.position.Y += globalPhysics.velocity.Y;
         }
 
         isMoving = (globalPhysics.velocity.X != 0 ||
-                    globalPhysics.velocity.Y !=
-                    0);                                                                                                 // Updates Animation Boolean flag (tells the animator whether to walk or not)
+                    globalPhysics.velocity.Y != 0);                                                                                                 // Updates Animation Boolean flag (tells the animator whether to walk or not)
     }
 
     private void AnimationLoop()

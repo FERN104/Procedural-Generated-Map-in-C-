@@ -12,7 +12,7 @@ public class GridCell
     public List<Entity> Current_Entities;
     public GridCell(Vector2 pos) {
         Position = pos;
-        Walkable = true;
+        Walkable = false;
         Current_Entities = new List<Entity>();
         Code = '#';
     }
@@ -53,7 +53,7 @@ public partial class MapGrids
         switch (strategy)
         {
             case 1: GeneratorAlgorithm(0.45f); break;
-            case 2: GraphGeneration(0.5f, 6); break;
+            case 2: GraphGeneration(0.5f, 16, 0.4f); break;
         }
         
         LoadMap();
@@ -61,12 +61,12 @@ public partial class MapGrids
         dirtyCells = new HashSet<GridCell>();
     }
 
-    public GridCell GetCellAtPosition(Vector2 pos)
+    public GridCell? GetCellAtPosition(Vector2 pos)
     {
         int x = (int)(pos.X / cellSize);
         int y = (int)(pos.Y / cellSize);
         
-        if (x < 0 || y < 0 || x>= mapWidth || y >= mapHeight)
+        if (x < 0 || y < 0 || x >= cols || y >= rows)
             return null;
         
         return grid[x, y];
@@ -89,7 +89,6 @@ public partial class MapGrids
                 yield return grid[x, y];
     }
 
-
     public void UpdateCells(List<Entity> entities)
     {
         foreach (GridCell cell in dirtyCells)
@@ -107,6 +106,50 @@ public partial class MapGrids
                 dirtyCells.Add(cell);
             }
         }
+    }
+
+    public Vector2 findEmptyGrid(Vector2 size)
+    {
+        int width =  (int)(size.X / cellSize);
+        int height = (int)(size.Y / cellSize);
+        
+        if (width > cols || height > rows)
+            return Vector2.Zero;
+        
+        for (int x = 0; x <= cols - width; x++)
+        {
+            for (int y = 0; y <= rows - height; y++)
+            {
+                bool space = true;
+                
+                for (int ix = 0; ix < width; ix++)
+                {
+                    if (x + ix >= cols || x + ix < 0)
+                    {
+                        space = false;
+                        break;
+                    }
+                    for (int iy = 0; iy < height; iy++)
+                    {
+                        if (y + iy >= rows || y + iy < 0)
+                        {
+                            space = false;
+                            break;
+                        }
+
+                        if (!grid[x + ix, y + iy].Walkable)
+                        {
+                            space = false;
+                            break;
+                        }
+                    }
+                    if (!space) break;
+                }
+                if (space)
+                    return new Vector2(x * cellSize, y * cellSize);
+            }
+        }
+        return Vector2.Zero;
     }
 
     public void Draw()

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Cs_raylib_test.MapLogic;
 using Raylib_cs;
 
 namespace Cs_raylib_test.Entities;
@@ -37,15 +38,22 @@ public abstract class Entity
     protected GlobalStats globalStats;
     protected GlobalPhysics globalPhysics;
     protected TextureVars textureVars;
+    protected MapGrids map;
 
     public ref GlobalStats getGlobalStats() { return ref globalStats; }
     public ref GlobalPhysics getGlobalPhysics() { return ref globalPhysics; }
+    public ref TextureVars getTextureVars() { return ref textureVars; }
     public abstract void draw();
 
-    public abstract void update(Vector2 mousePos);
+    public abstract void update(Vector2 mousePos, MapGrids map);
 
     public virtual Rectangle getRectangle()
     {
         return new Rectangle(this.globalPhysics.position.X, globalPhysics.position.Y, textureVars.frameDimensions.X, textureVars.frameDimensions.Y);
+    }
+
+    public Entity(MapGrids grid)
+    {
+        map = grid;
     }
 }
