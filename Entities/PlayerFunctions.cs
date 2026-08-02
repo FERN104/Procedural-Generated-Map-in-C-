@@ -38,8 +38,7 @@ public partial class Player : Entity
             // Collisions
             CollisionManager.instance.CheckCollision(this);
             
-            globalPhysics.position.X += globalPhysics.velocity.X;                                                           // Register velocity
-            globalPhysics.position.Y += globalPhysics.velocity.Y;
+           globalPhysics.position += globalPhysics.velocity;
         }
 
         isMoving = (globalPhysics.velocity.X != 0 ||

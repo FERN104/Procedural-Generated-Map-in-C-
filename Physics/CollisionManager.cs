@@ -19,17 +19,48 @@ public class CollisionManager
 
     public void CheckCollision(Entity entity)
     {
-        Vector2 nextPos = entity.getGlobalPhysics().position +
-                          entity.getGlobalPhysics().velocity;
-        foreach (GridCell cell in map.GetCellsAtRect(
-                     new Rectangle(nextPos.X,
-                         nextPos.Y,
-                         entity.getTextureVars().frameRec.Width/2.0f,
-                         entity.getTextureVars().frameRec.Height/2.0f)))
+        float width = entity.getTextureVars().frameRec.Width;
+        float height = entity.getTextureVars().frameRec.Height;
+        
+        Rectangle hitbox = new Rectangle(
+            entity.getGlobalPhysics().position.X - (entity.getTextureVars().frameRec.Width / 2.0f),
+            entity.getGlobalPhysics().position.Y - (entity.getTextureVars().frameRec.Height / 2.0f),
+            width,
+            height
+        );
+        
+        // X Check
+        float nextX  = entity.getGlobalPhysics().position.X + entity.getGlobalPhysics().velocity.X;
+        Rectangle hitboxX = new Rectangle(
+            nextX - width / 2f,
+            hitbox.Y,
+            width,
+            height
+        );
+        
+        foreach (GridCell cell in map.GetCellsAtRect(hitboxX))
         {
-            if (cell.Walkable == false)
+            if (!cell.Walkable)
             {
-                entity.getGlobalPhysics().velocity = Vector2.Zero;
+                entity.getGlobalPhysics().velocity.X = 0;
+                break;
+            }
+        }
+        
+        // Y Check
+        float nextY  = entity.getGlobalPhysics().position.Y + entity.getGlobalPhysics().velocity.Y;
+        Rectangle hitboxY = new Rectangle(
+            hitbox.X,
+            nextY - height / 2f,
+            width,
+            height
+        );
+        
+        foreach (GridCell cell in map.GetCellsAtRect(hitboxY))
+        {
+            if (!cell.Walkable)
+            {
+                entity.getGlobalPhysics().velocity.Y = 0;
                 break;
             }
         }

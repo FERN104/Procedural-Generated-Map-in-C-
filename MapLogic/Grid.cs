@@ -146,7 +146,7 @@ public partial class MapGrids
                     if (!space) break;
                 }
                 if (space)
-                    return new Vector2(x * cellSize, y * cellSize);
+                    return new Vector2((x + width / 2f)* cellSize, (y + height /2f) * cellSize);
             }
         }
         return Vector2.Zero;

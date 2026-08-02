@@ -34,7 +34,7 @@ public partial class Player : Entity
         
         //Change starting position values
         globalPhysics.position = map.findEmptyGrid(new Vector2(textureVars.frameRec.Width, textureVars.frameRec.Height));
-        globalPhysics.speed = 10f;
+        globalPhysics.speed = 20f;
 
         spells = new List<Spell.Spell>();
     }
