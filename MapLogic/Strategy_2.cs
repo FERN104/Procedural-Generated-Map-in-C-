@@ -8,6 +8,7 @@ public struct Room
     public Vector2 gridPosition;
     public int shapeIndex;
     public int Diameter;
+    public bool connected;
 
     public Room(float minPercentage, Rectangle segment)
     {
@@ -79,10 +80,26 @@ public partial class MapGrids
         {
             //Basic setup to feed each room into the next
             Vector2 a = rooms[i].gridPosition;
-            Vector2 b = (i + 1) < rooms.Count ? rooms[i + 1].gridPosition : rooms[0].gridPosition; // Don't go over the array size
+
+            Room closestRoom = rooms[0]; //Temporary declaration
+            for (int o = 0; o < rooms.Count; o++)
+            {
+                Room current = rooms[o];
+                Vector2 bPos = current.gridPosition;
+                if (bPos == a || current.connected)
+                    continue;
+
+                if (Vector2.Distance(closestRoom.gridPosition, a) > Vector2.Distance(current.gridPosition, a))
+                    closestRoom = current;
+            }
+
+            Vector2 b = closestRoom.gridPosition;
+            
+            //take half of the smallest room
+            int corridorWidth = Math.Min(rooms[i].Diameter, closestRoom.Diameter) / 2;
             
             //CarveCorridorsDiag(a, b);
-            carveCorridorL(a, b);
+            carveCorridorL(a, b, corridorWidth);
         }
     }
     
@@ -156,30 +173,48 @@ public partial class MapGrids
 
     }
 
-    public void carveCorridorL(Vector2 a, Vector2 b)
+    public void carveCorridorL(Vector2 a, Vector2 b, int corridorWidth)
     {
         int aX =  (int)a.X;
         int aY =  (int)a.Y;
         int bX = (int)b.X;
         int bY =  (int)b.Y;
         
-        int dx = Math.Abs(aX - bX);
-        int dy = Math.Abs(aY - bY);
+        //Choose the Bend Point
+        int bendX = aX;
+        int bendY = bY;
         
+        //Starting X and Y
+        int startX = Math.Min(bX, bendX);
+        int startY = Math.Min(aY, bendY);
         
+        //End Y and X
+        int endX = Math.Max(bX, bendX);
+        int endY = Math.Max(aY, bendY);
         
-        for (int x = aX; x <= bX; x++)
+        //Setup Corridor starting points
+        int vCorridorStart = Math.Clamp((bendY - corridorWidth / 2), 0, rows - 1);
+        int hCorridorStart = Math.Clamp((bendX - corridorWidth / 2), 0, cols - 1);
+        
+        //Setup Corridor limits
+        int vCorridorLimit = Math.Clamp((bendY + corridorWidth / 2), 0, rows - 1);
+        int hCorridorLimit = Math.Clamp((bendX + corridorWidth / 2), 0, cols - 1);
+        
+        for (int x = startX; x <= endX; x++)
         {
-            int y = dx > dy ? aY : bY;
-            grid[x, y].Code = '.';
-            grid[x, y].Walkable = true;
+            for (int y = vCorridorStart; y < vCorridorLimit; y++){
+                grid[x, y].Code = '.';
+                grid[x, y].Walkable = true;
+            }
         }
 
-        for (int y = aY; y <= bY; y++)
+        for (int y = startY; y <= endY; y++)
         {
-            int x = dx > dy ? bX : aX;
-            grid[x, y].Code = '.';
-            grid[x, y].Walkable = true;
+            for (int x = hCorridorStart; x < hCorridorLimit; x++)
+            {
+                grid[x, y].Code = '.';
+                grid[x, y].Walkable = true;
+            }
         }
     }
 
