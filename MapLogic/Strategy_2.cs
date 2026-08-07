@@ -12,7 +12,7 @@ public struct Room
 
     public Room(float minPercentage, Rectangle segment)
     {
-        shapeIndex = Random.Shared.Next(3); // Inclusive of Min, Exclusive of Max meaning 0 - 2 range if max is 3
+        shapeIndex = Random.Shared.Next(2); // Inclusive of Min, Exclusive of Max meaning 0 - 2 range if max is 3
 
         int margin = 3;
         
