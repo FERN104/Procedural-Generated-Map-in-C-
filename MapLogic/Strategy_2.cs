@@ -200,6 +200,7 @@ public partial class MapGrids
         int vCorridorLimit = Math.Clamp((bendY + corridorWidth / 2), 0, rows - 1);
         int hCorridorLimit = Math.Clamp((bendX + corridorWidth / 2), 0, cols - 1);
         
+        // Carve The X axis corridor
         for (int x = startX; x <= endX; x++)
         {
             for (int y = vCorridorStart; y < vCorridorLimit; y++){
@@ -207,10 +208,21 @@ public partial class MapGrids
                 grid[x, y].Walkable = true;
             }
         }
-
+        
+        // Carve the Y axis corridor
         for (int y = startY; y <= endY; y++)
         {
             for (int x = hCorridorStart; x < hCorridorLimit; x++)
+            {
+                grid[x, y].Code = '.';
+                grid[x, y].Walkable = true;
+            }
+        }
+        
+        //Carve the bend
+        for (int x = bendX - corridorWidth/2; x <= bendX + corridorWidth / 2; x++)
+        {
+            for (int y = bendY - corridorWidth/2; y < bendY + corridorWidth/2; y++)
             {
                 grid[x, y].Code = '.';
                 grid[x, y].Walkable = true;
