@@ -3,15 +3,20 @@ using System.Numerics;
 
 namespace Cs_raylib_test.MapLogic;
 
-public struct Room
+public struct Room : IEquatable<Room>
 {
     public Vector2 gridPosition;
     public int shapeIndex;
     public int Diameter;
-    public bool connected;
+
+    private Guid UUID;
+    private int hash;
 
     public Room(float minPercentage, Rectangle segment)
     {
+        UUID = Guid.NewGuid();
+        hash = UUID.GetHashCode();
+        
         shapeIndex = Random.Shared.Next(2); // Inclusive of Min, Exclusive of Max meaning 0 - 2 range if max is 3
 
         int margin = 3;
@@ -29,6 +34,24 @@ public struct Room
                 segment.Y + segment.Height - margin - Diameter / 2)
         );
     }
+
+    public bool Equals(Room other)
+    {
+        return gridPosition == other.gridPosition;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is Room oth && Equals(oth);
+    }
+
+    public override int GetHashCode()
+    {
+        return hash;
+    }
+
+    public static bool operator ==(Room a, Room b) => a.gridPosition == b.gridPosition;
+    public static bool operator !=(Room a, Room b) => a.gridPosition != b.gridPosition;
 }
 
 
@@ -36,7 +59,7 @@ public partial class MapGrids
 {
     private void GraphGeneration(float minPercentage, int gridCount, float roomChance)
     {
-        List<Room> rooms = new List<Room>();
+        Room[] rooms = new Room[gridCount]; // Create an array that allows all the spaces to potentialy be filled
         List<Rectangle> segments = new List<Rectangle>();
         
         // Create Segments for the gridCount
@@ -58,6 +81,7 @@ public partial class MapGrids
             }
         }
 
+        int roomCount = 0;
         for (int i = 0; i < segments.Count; i++)
         {
             if (roomChance < Random.Shared.NextSingle())
@@ -72,31 +96,57 @@ public partial class MapGrids
                 case 1: CircleRoom(ref room); break;
                 case 2: TriangleRoom(ref room); break;
             }
-
-            rooms.Add(room);
+            
+            rooms[roomCount] = room;
+            roomCount++;
         }
+        
+        Array.Resize(ref rooms, roomCount); // Shrink the array to not take extra space for no reason
 
-        for (int i = 0; i < rooms.Count; i++)
+        HashSet<Room> unvisited = new HashSet<Room>(rooms); // No duplicates in hashsets
+        Dictionary<Room, Room> roomPairs = new Dictionary<Room, Room>(); // Store the pairs
+        
+        Room curr = rooms[0];
+        unvisited.Remove(curr);
+        
+        while (unvisited.Count > 0)
         {
-            //Basic setup to feed each room into the next
-            Vector2 a = rooms[i].gridPosition;
-
-            Room closestRoom = rooms[0]; //Temporary declaration
-            for (int o = 0; o < rooms.Count; o++)
+            Room closest = default;
+            float closestDistanceSq = float.MaxValue;
+            bool match = false;
+            
+            foreach (Room check in unvisited)
             {
-                Room current = rooms[o];
-                Vector2 bPos = current.gridPosition;
-                if (bPos == a || current.connected)
-                    continue;
+                float distSq = Vector2.DistanceSquared(check.gridPosition, curr.gridPosition);
+                if (distSq < closestDistanceSq)
+                {
+                    closestDistanceSq = distSq;
+                    closest = check;
+                    match = true;
+                }
+            }
+            
+            if (match) // Found match so add it and move to the next in the array.
+            {
+                roomPairs.Add(curr, closest);
 
-                if (Vector2.Distance(closestRoom.gridPosition, a) > Vector2.Distance(current.gridPosition, a))
-                    closestRoom = current;
+                curr = closest;
+                unvisited.Remove(curr); // Update the unvisted rooms list
             }
 
-            Vector2 b = closestRoom.gridPosition;
+        }
+
+        foreach (Room key in roomPairs.Keys)
+        {
+            Room current = key;
+            
+            //Basic setup to feed each room into the next
+            Vector2 a = current.gridPosition;
+            
+            Vector2 b = roomPairs[current].gridPosition;
             
             //take half of the smallest room
-            int corridorWidth = Math.Min(rooms[i].Diameter, closestRoom.Diameter) / 2;
+            int corridorWidth = Math.Min(current.Diameter, roomPairs[current].Diameter) / 2;
             
             //CarveCorridorsDiag(a, b);
             carveCorridorL(a, b, corridorWidth);
