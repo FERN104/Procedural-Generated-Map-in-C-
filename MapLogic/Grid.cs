@@ -76,16 +76,18 @@ public partial class MapGrids
     {
         float minX = rect.X;
         float minY = rect.Y;
-        float maxX = rect.X + rect.Width-1;
-        float maxY = rect.Y + rect.Height-1;
+        float maxX = rect.X + rect.Width;
+        float maxY = rect.Y + rect.Height;
         
+        //Math.Floor was an attempt to fix collision bugs (didn't work)
         int startX = Math.Clamp((int)(minX/cellSize), 0, cols- 1);
         int startY = Math.Clamp((int)(minY / cellSize), 0, rows - 1);
         int endX = Math.Clamp((int)(maxX / cellSize), 0, cols - 1);
-        int endY = Math.Clamp((int)(maxY/cellSize), 0, rows - 1);
+        int endY = Math.Clamp((int)(maxY /cellSize), 0, rows - 1);
         
-        for (int x = startX; x <= endX; x++)
-            for (int y = startY; y <= endY; y++)
+        
+        for (int y = startY; y <= endY; y++)
+            for (int x = startX; x <= endX; x++)    
                 yield return grid[x, y];
     }
 
@@ -112,6 +114,9 @@ public partial class MapGrids
     {
         int width =  (int)(size.X / cellSize);
         int height = (int)(size.Y / cellSize);
+
+        width += 2; // buffer so the player does spawn against a wall
+        height += 2;
         
         if (width > cols || height > rows)
             return Vector2.Zero;

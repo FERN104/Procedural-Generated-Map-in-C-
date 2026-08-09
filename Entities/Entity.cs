@@ -16,6 +16,7 @@ public struct GlobalPhysics
 {
     public Vector2 position;
     public Vector2 velocity;
+    public Vector2 Hitbox;
     public float rotation;
     public float speed;
 }

@@ -23,7 +23,16 @@ public class MainMenu : Scene
         play.update();
         quit.update();
         
-        if (play.getIsClicked()) return SceneSwitch.GAME_SCREEN;
+        if (play.getIsClicked())
+        {
+            Cooldown waitTime = new Cooldown(0.1f);
+
+            while (true)
+            {
+                if (waitTime.isReady())
+                    return SceneSwitch.GAME_SCREEN;
+            }
+        }
         if (quit.getIsClicked()) return SceneSwitch.QUIT;
         
         return SceneSwitch.MAIN_MENU;

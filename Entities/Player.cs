@@ -11,7 +11,7 @@ namespace Cs_raylib_test.Entities;
 public partial class Player : Entity
 {
     private Cooldown animTimer;
-    Vector2 targetpos = Vector2.Zero;
+    Vector2 targetpos;
     Vector2 intitSpellVel = Vector2.Zero;
     private bool isMoving = true;
     private Vector2 SpellDirection = Vector2.Zero;
@@ -33,9 +33,14 @@ public partial class Player : Entity
         animTimer = new Cooldown(textureVars.frameTime);
         
         //Change starting position values
-        globalPhysics.position = map.findEmptyGrid(new Vector2(textureVars.frameRec.Width, textureVars.frameRec.Height));
+        globalPhysics.Hitbox = new(104, 108);
+        globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y));
         globalPhysics.speed = 20f;
-
+        
+        targetpos = globalPhysics.position;
+        
+        
+        
         spells = new List<Spell.Spell>();
     }
 

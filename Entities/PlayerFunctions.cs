@@ -19,7 +19,7 @@ public partial class Player : Entity
         if (IsMouseButtonDown(SettingsManager.singleInstance.gameSettings.controls.move))
             targetpos = mousePos;                                                                                   // Update the mouse position in the target pos Vector
                                                                                                                     // Only do this when holding left-click
-
+                                                                                                                    
         // Normalise Vector to give pure direction
         float dx = (targetpos.X - globalPhysics.position.X);                                                            // Redefine with target position to keep going to clicked location
         float dy = (targetpos.Y - globalPhysics.position.Y);
@@ -32,13 +32,19 @@ public partial class Player : Entity
         if (distance > globalPhysics.speed)
         {
             this.SpellDirection = new Vector2(dx/distance, dy/distance);
-            globalPhysics.velocity.X = (dx / distance) * globalPhysics.speed;                                           // this uses the vector normalisation formula to create a pure direction (Distance is 1).
-            globalPhysics.velocity.Y = (dy / distance) * globalPhysics.speed;                                           // Formula: Normalised = Vector / Magnitude
-                                                                                                                        // Multiplying by speed then allows us to move the player along the vector
+            float targetVelX = (dx / distance) * globalPhysics.speed;                                           // this uses the vector normalisation formula to create a pure direction (Distance is 1).
+            float targetVelY = (dy / distance) * globalPhysics.speed;                                           // Formula: Normalised = Vector / Magnitude
+                                                                                                                // Multiplying by speed then allows us to move the player along the vector
+                                                                                                                        
+            globalPhysics.velocity.X = targetVelX;
+            globalPhysics.velocity.Y = targetVelY;
+            
             // Collisions
             CollisionManager.instance.CheckCollision(this);
-            
-           globalPhysics.position += globalPhysics.velocity;
+        }
+        else
+        {
+            globalPhysics.position = targetpos; // close enough so smoothly snap
         }
 
         isMoving = (globalPhysics.velocity.X != 0 ||
@@ -46,27 +52,27 @@ public partial class Player : Entity
     }
 
     private void AnimationLoop()
+    {
+        if (animTimer.isReady() && isMoving)
         {
-            if (animTimer.isReady() && isMoving)
-            {
-                animTimer.reset();
-                textureVars.currentFrame++;
+            animTimer.reset();
+            textureVars.currentFrame++;
 
-                if (textureVars.currentFrame >= textureVars.numberOfFrames)
-                {
-                    textureVars.currentFrame = 0;
-                }
-                
-                int currentCol = textureVars.currentFrame % textureVars.frameColumnCount;
-                int currentRow = textureVars.currentFrame / textureVars.frameColumnCount;
-                
-                textureVars.frameRec.X = currentCol * textureVars.frameDimensions.X;
-                textureVars.frameRec.Y = currentRow * textureVars.frameDimensions.Y;
-            }
-            else if (animTimer.isReady())
+            if (textureVars.currentFrame >= textureVars.numberOfFrames)
             {
-                textureVars.frameRec.X = 0;
-                textureVars.frameRec.Y = textureVars.frameDimensions.Y;
+                textureVars.currentFrame = 0;
             }
+            
+            int currentCol = textureVars.currentFrame % textureVars.frameColumnCount;
+            int currentRow = textureVars.currentFrame / textureVars.frameColumnCount;
+            
+            textureVars.frameRec.X = currentCol * textureVars.frameDimensions.X;
+            textureVars.frameRec.Y = currentRow * textureVars.frameDimensions.Y;
         }
+        else if (animTimer.isReady())
+        {
+            textureVars.frameRec.X = 0;
+            textureVars.frameRec.Y = textureVars.frameDimensions.Y;
+        }
+    }
 }
