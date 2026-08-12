@@ -53,7 +53,7 @@ public partial class MapGrids
         switch (strategy)
         {
             case 1: GeneratorAlgorithm(0.45f); break;
-            case 2: GraphGeneration(0.5f, 16, 0.4f); break;
+            case 2: GraphGeneration(0.5f, 25, 0.6f); break;
         }
         
         LoadMap();
@@ -165,6 +165,13 @@ public partial class MapGrids
         }
     }
 
+    public ref HashSet<GridCell> GetDirtyCells()
+    {
+        return ref dirtyCells;
+    }
+
+    public GridCell GetCellAt(int x, int y) { return grid[x, y];}
+    
     private void LoadMap()
     {
         foreach (GridCell cell in grid)

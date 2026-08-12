@@ -17,6 +17,8 @@ public class GameScreen : Scene
     private Buttons pause;
 
     private Player player;
+    private Enemy enemy;
+    
     MapGrids grid;
     CollisionManager collisionManager;
     
@@ -41,6 +43,9 @@ public class GameScreen : Scene
         /* Game Objects */
         player = new Player(grid);
         entities.Add(player); // Add the player object so the map knows it exists
+
+        enemy = new Enemy(grid);
+        entities.Add(enemy);
         
         camera = new Camera2D();
         camera.Offset = new Vector2(GetScreenWidth()/2, GetScreenHeight()/2);
@@ -62,8 +67,13 @@ public class GameScreen : Scene
         {
             camera.Target = player.getGlobalPhysics().position; //Smooth following
             
-            player.update(GetScreenToWorld2D(GetMousePosition(), camera), grid);
+            foreach (Entity e in entities)
+                e.update(GetScreenToWorld2D(GetMousePosition(), camera), grid);
+            
             SpellManager.Instance.update(player);
+            
+            enemy.enemyAI(player);
+            
             pause.update();
             if (pause.getIsClicked())
             {
@@ -96,6 +106,7 @@ public class GameScreen : Scene
     {
         BeginMode2D(camera);
         player.draw();
+        enemy.draw();
         SpellManager.Instance.draw();
         grid.Draw();
         EndMode2D();
