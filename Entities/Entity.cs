@@ -11,6 +11,8 @@ public struct GlobalStats
     public int Mana;
     public int MaxMana;
     public float damageMultiplier;
+    public int attackDamage;
+    public float attackDelay;
 }
 public struct GlobalPhysics
 {

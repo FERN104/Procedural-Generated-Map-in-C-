@@ -48,4 +48,14 @@ public partial class Player : Entity
             textureVars.frameRec.Y = textureVars.frameDimensions.Y;
         }
     }
+
+    public void Damage(int amount)
+    {
+        globalStats.Health -= amount;
+    }
+
+    public bool Alive()
+    {
+        return globalStats.Health > 0;
+    }
 }

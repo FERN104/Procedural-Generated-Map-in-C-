@@ -57,7 +57,7 @@ public class GameScreen : Scene
     
     public override SceneSwitch update()
     {
-        
+        if (!player.Alive()) return SceneSwitch.MAIN_MENU;        
         if (IsKeyPressed(KeyboardKey.Escape))
         {
             isPaused = !isPaused;

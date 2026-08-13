@@ -37,6 +37,9 @@ public partial class Player : Entity
         globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y));
         globalPhysics.speed = 20f;
         
+        globalStats.MaxHealth = 100;
+        globalStats.Health = globalStats.MaxHealth;
+        
         targetpos = globalPhysics.position;
         
         
