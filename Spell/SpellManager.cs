@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Cs_raylib_test.Entities;
+using Cs_raylib_test.MapLogic;
 using Cs_raylib_test.Settings;
 using Raylib_cs;
 
@@ -19,26 +20,29 @@ public class SpellManager
         spellPool = new Stack<Spell>();
     }
 
-    private static Dictionary<KeyboardKey, Func<Spell>> SpellCaster = new()
+    private static Dictionary<KeyboardKey, Func<Entity, Spell>> SpellCaster = new()
     {
-        { SettingsManager.singleInstance.gameSettings.controls.fireball, () => new Fireball() },
-        { SettingsManager.singleInstance.gameSettings.controls.Firebeam, () => new FireBeam() },
+        { SettingsManager.singleInstance.gameSettings.controls.fireball, (caster) => new Fireball(caster) },
+        { SettingsManager.singleInstance.gameSettings.controls.Firebeam, (caster) => new FireBeam(caster) },
     };
 
-    public void update(Player player)
+    public void update(Player player, MapGrids map)
     {
         KeyboardKey key = (KeyboardKey)GetKeyPressed();
         if (SpellCaster.TryGetValue(key, out var func) && key != KeyboardKey.Null)
         {
             Vector2[] spellinfo = player.getSpellInfo();
-            Spell spell = spellPool.Count > 0
+            Spell spell = spellPool.Count > 0 // Get spell from pool or create new one
                 ? spellPool.Pop()
-                : func();
+                : func(player);
             spell.Reset(spellinfo[0], spellinfo[1]);
             activeSpells.Add(spell);
         }
-        
-        foreach (Spell spell in activeSpells) { spell.update(); }
+
+        foreach (Spell spell in activeSpells)
+        {
+            spell.update(map);
+        }
         
         if (activeSpells.Count != 0)
         {

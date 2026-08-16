@@ -42,6 +42,8 @@ public abstract class Entity
     protected GlobalPhysics globalPhysics;
     protected TextureVars textureVars;
     protected MapGrids map;
+    public Vector2 oldTarget;
+    public Vector2 targetPos;
 
     public ref GlobalStats getGlobalStats() { return ref globalStats; }
     public ref GlobalPhysics getGlobalPhysics() { return ref globalPhysics; }
@@ -52,11 +54,20 @@ public abstract class Entity
 
     public virtual Rectangle getRectangle()
     {
-        return new Rectangle(this.globalPhysics.position.X, globalPhysics.position.Y, textureVars.frameDimensions.X, textureVars.frameDimensions.Y);
+        return new Rectangle(this.globalPhysics.position.X, globalPhysics.position.Y, globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y);
     }
 
     public Entity(MapGrids grid)
     {
         map = grid;
+    }
+    
+    public void Damage(int amount)
+    {
+        globalStats.Health -= amount;
+    }
+    public bool Alive()
+    {
+        return globalStats.Health > 0;
     }
 }

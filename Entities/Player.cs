@@ -11,7 +11,6 @@ namespace Cs_raylib_test.Entities;
 public partial class Player : Entity
 {
     private Cooldown animTimer;
-    Vector2 targetpos;
     Vector2 intitSpellVel = Vector2.Zero;
     private bool isMoving = true;
     private Vector2 SpellDirection = Vector2.Zero;
@@ -34,13 +33,13 @@ public partial class Player : Entity
         
         //Change starting position values
         globalPhysics.Hitbox = new(104, 108);
-        globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y));
-        globalPhysics.speed = 20f;
+        globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y), 0, 0);
+        globalPhysics.speed = 13f;
         
         globalStats.MaxHealth = 100;
         globalStats.Health = globalStats.MaxHealth;
         
-        targetpos = globalPhysics.position;
+        targetPos = globalPhysics.position;
         
         
         

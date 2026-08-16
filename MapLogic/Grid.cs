@@ -109,8 +109,9 @@ public partial class MapGrids
             }
         }
     }
-
-    public Vector2 findEmptyGrid(Vector2 size)
+    
+    // Allows for random empty grids
+    public Vector2 findEmptyGrid(Vector2 size, int startX, int startY)
     {
         int width =  (int)(size.X / cellSize);
         int height = (int)(size.Y / cellSize);
@@ -121,9 +122,9 @@ public partial class MapGrids
         if (width > cols || height > rows)
             return Vector2.Zero;
         
-        for (int x = 0; x <= cols - width; x++)
+        for (int x = startX; x <= cols - width; x++)
         {
-            for (int y = 0; y <= rows - height; y++)
+            for (int y = startY; y <= rows - height; y++)
             {
                 bool space = true;
                 

@@ -23,12 +23,14 @@ public class GameScreen : Scene
     CollisionManager collisionManager;
     
     List<Entity> entities;
+    List<Enemy> enemies;
 
     private Camera2D camera;
     
     public GameScreen()
     {
         entities = new List<Entity>(); // Initialise the list
+        enemies = new List<Enemy>();
         
         /* Map */
         grid = new MapGrids(1920*3, 1080*3, 8); // Create The grid the map is on
@@ -46,6 +48,7 @@ public class GameScreen : Scene
 
         enemy = new Enemy(grid);
         entities.Add(enemy);
+        enemies.Add(enemy);
         
         camera = new Camera2D();
         camera.Offset = new Vector2(GetScreenWidth()/2, GetScreenHeight()/2);
@@ -70,9 +73,10 @@ public class GameScreen : Scene
             foreach (Entity e in entities)
                 e.update(GetScreenToWorld2D(GetMousePosition(), camera), grid);
             
-            SpellManager.Instance.update(player);
+            SpellManager.Instance.update(player, grid);
             
-            enemy.enemyAI(player);
+            foreach (Enemy e in enemies)
+                e.enemyAI(player);
             
             pause.update();
             if (pause.getIsClicked())
@@ -80,8 +84,11 @@ public class GameScreen : Scene
                 isPaused = true;
                 pause.setIsClicked(false);
             }
+            entities.RemoveAll(e => !e.Alive());
+            enemies.RemoveAll(e => !e.Alive());
             
             grid.UpdateCells(entities); // While the game is active update the map grid
+            
         }
         else
         {
@@ -105,8 +112,10 @@ public class GameScreen : Scene
     public override void draw()
     {
         BeginMode2D(camera);
-        player.draw();
-        enemy.draw();
+        foreach (Entity e in entities)
+        {
+            e.draw();
+        }
         SpellManager.Instance.draw();
         grid.Draw();
         EndMode2D();

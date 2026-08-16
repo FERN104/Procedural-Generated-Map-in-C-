@@ -16,9 +16,9 @@ public partial class Player : Entity
 
         // Movement
         if (IsMouseButtonDown(SettingsManager.singleInstance.gameSettings.controls.move))
-            targetpos = mousePos;                                                                                   // Update the mouse position in the target pos Vector
+            targetPos = mousePos;                                                                                   // Update the mouse position in the target pos Vector
                                                                                                                     // Only do this when holding left-click
-        CollisionManager.instance.MoveToPoint(this, targetpos, dir=> SpellDirection = dir);
+        CollisionManager.instance.MoveToPoint(this, dir=> SpellDirection = dir);
 
         isMoving = (globalPhysics.velocity.X != 0 ||
                     globalPhysics.velocity.Y != 0);                                                                                                 // Updates Animation Boolean flag (tells the animator whether to walk or not)
@@ -47,15 +47,5 @@ public partial class Player : Entity
             textureVars.frameRec.X = 0;
             textureVars.frameRec.Y = textureVars.frameDimensions.Y;
         }
-    }
-
-    public void Damage(int amount)
-    {
-        globalStats.Health -= amount;
-    }
-
-    public bool Alive()
-    {
-        return globalStats.Health > 0;
     }
 }

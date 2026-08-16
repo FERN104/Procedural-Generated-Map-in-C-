@@ -131,14 +131,14 @@ public class CollisionManager
         }
     }
 
-    public void MoveToPoint(Entity self, Vector2 target, Action<Vector2> spellDirection) //Abstracted movement from player to work for enemies aswell
+    public void MoveToPoint(Entity self, Action<Vector2> spellDirection) //Abstracted movement from player to work for enemies aswell
     {
         ref GlobalPhysics physics = ref self.getGlobalPhysics();
         physics.velocity = Vector2.Zero;                                                                      // Completely reset velocity to ensure it doesn't accelerate  
         
         // Normalise Vector to give pure direction
-        float dx = (target.X - physics.position.X);                                                            // Redefine with target position to keep going to clicked location
-        float dy = (target.Y - physics.position.Y);
+        float dx = (self.targetPos.X - physics.position.X);                                                            // Redefine with target position to keep going to clicked location
+        float dy = (self.targetPos.Y - physics.position.Y);
         float distance = (float)Math.Sqrt(dx * dx + dy * dy);                                                           // Find distance with Pythagoras theorem
 
         // Rotation
@@ -157,7 +157,7 @@ public class CollisionManager
         }
         else
         {
-            physics.position = target; // close enough so smoothly snap
+            physics.position = self.targetPos; // close enough so smoothly snap
         }
     }
 }

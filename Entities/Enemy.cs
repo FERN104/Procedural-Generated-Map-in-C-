@@ -25,8 +25,6 @@ public class Enemy : Entity
     
     private States state = States.IDLE;
 
-    private Vector2 targetPos;
-
     private int sightRange = 800;
     private int attackRange = 50;
 
@@ -35,8 +33,8 @@ public class Enemy : Entity
     public Enemy(MapGrids map) : base(map)
     {
         globalPhysics.Hitbox = new Vector2(100, 100);
-        globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y));
-        globalPhysics.speed = 4;
+        globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y), Random.Shared.Next(0, (int)(map.mapWidth/map.cellSize)), Random.Shared.Next(0, (int)(map.mapHeight/map.cellSize)));
+        globalPhysics.speed = 10;
         
         globalStats.MaxHealth = 100;
         globalStats.Health = globalStats.MaxHealth;
@@ -54,7 +52,7 @@ public class Enemy : Entity
         if (globalStats.Health <= 0)
             state = States.DEAD;
         
-        CollisionManager.instance.MoveToPoint(this, targetPos, (dir) => { });
+        CollisionManager.instance.MoveToPoint(this, (dir) => { });
     }
 
     public override void draw()
@@ -102,7 +100,10 @@ public class Enemy : Entity
         }
     }
 
-    private void Target(Player player) { targetPos = player.getGlobalPhysics().position; }
+    private void Target(Player player)
+    {
+        targetPos = player.getGlobalPhysics().position;
+    }
 
     private bool ClearLineOfSight(Vector2 pos, Vector2 target) // Can the enemy see the player?
     {
@@ -131,9 +132,9 @@ public class Enemy : Entity
         
         while (true)
         {
-            if (map.GetCellAt(x0,y0).Walkable == false)
+            if (!map.GetCellAt(x0, y0).Walkable)
                 return false;
-            
+
             if (x0 == x1 && y0 == y1) 
                 break;
             
@@ -157,6 +158,7 @@ public class Enemy : Entity
 
         return true;
     }
+    
 
     private void Roaming()
     {
