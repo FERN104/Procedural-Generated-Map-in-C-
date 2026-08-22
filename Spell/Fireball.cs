@@ -30,12 +30,20 @@ public class Fireball : Spell
             isAlive = false;
         }
 
-        foreach (var entity in map.GetCellAtPosition(position).Current_Entities)
+        GridCell currentCell = map.GetCellAtPosition(position);
+
+        if (!currentCell.Walkable)
+        {
+            isAlive = false;
+            return;
+        }
+
+        foreach (var entity in currentCell.Current_Entities)
         {
             if (entity == null) continue;
             if (entity == caster) continue;
-            
             entity.Damage(damage);
+            isAlive = false;
         }
     }
 

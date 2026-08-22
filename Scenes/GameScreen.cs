@@ -25,6 +25,7 @@ public class GameScreen : Scene
     List<Entity> entities;
     List<Enemy> enemies;
 
+    private HUD hud;
     private Camera2D camera;
     
     public GameScreen()
@@ -49,6 +50,9 @@ public class GameScreen : Scene
         enemy = new Enemy(grid);
         entities.Add(enemy);
         enemies.Add(enemy);
+        
+        // Camera && HUD
+        hud = new HUD(player);
         
         camera = new Camera2D();
         camera.Offset = new Vector2(GetScreenWidth()/2, GetScreenHeight()/2);
@@ -77,7 +81,7 @@ public class GameScreen : Scene
             
             foreach (Enemy e in enemies)
                 e.enemyAI(player);
-            
+            hud.update();
             pause.update();
             if (pause.getIsClicked())
             {
@@ -126,6 +130,10 @@ public class GameScreen : Scene
             DrawText("Game Paused", (int)(GetScreenCenter().X - MeasureText("Game Paused", 100)/2), 100, 100, Color.Red);
             menu.draw();   
             resume.draw();
+        }
+        else
+        {
+            hud.draw();
         }
     }
 
