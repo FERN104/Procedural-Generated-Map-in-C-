@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Cs_raylib_test.Engine_Tools;
 using Cs_raylib_test.MapLogic;
 using Raylib_cs;
 
@@ -36,15 +37,23 @@ public struct TextureVars
     public float frameTime;
 }
 
+public struct SpellCooldowns
+{
+    public Cooldown fireball;
+    public Cooldown fireBeam;
+}
+
 public abstract class Entity
 {
     protected GlobalStats globalStats;
     protected GlobalPhysics globalPhysics;
     protected TextureVars textureVars;
+    protected SpellCooldowns spellCooldowns;
     protected MapGrids map;
     public Vector2 oldTarget;
     public Vector2 targetPos;
 
+    public ref SpellCooldowns getSpellCooldowns() {return ref spellCooldowns;}
     public ref GlobalStats getGlobalStats() { return ref globalStats; }
     public ref GlobalPhysics getGlobalPhysics() { return ref globalPhysics; }
     public ref TextureVars getTextureVars() { return ref textureVars; }

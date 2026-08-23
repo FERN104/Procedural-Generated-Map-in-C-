@@ -18,6 +18,7 @@ public class Fireball : Spell
 
     public Fireball(Entity caster) : base(caster)
     {
+        caster.getSpellCooldowns().fireball.reset();
         damage = 10;
     }
 
@@ -54,6 +55,7 @@ public class Fireball : Spell
 
     public override void Reset(Vector2 dir, Vector2 pos)
     {
+        caster.getSpellCooldowns().fireball.reset();
         base.Reset(dir, pos);
         startpos = pos;
         velocity = dir * speed;

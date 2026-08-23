@@ -17,6 +17,11 @@ public class Cooldown
         cooldown.Restart();
     }
 
+    public double getCooldownPercent()
+    {
+        return (cooldown.Elapsed.TotalSeconds / cooldownTime);
+    }
+
     public bool isReady()
     {
         return cooldown.Elapsed.TotalSeconds >= cooldownTime;

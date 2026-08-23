@@ -61,8 +61,7 @@ public class Enemy : Entity
     }
 
     public void enemyAI(Player player)
-    {
-        Console.WriteLine(state);
+    { 
         if (state == States.DEAD) return;
         
         // Logic to decide what State we are in

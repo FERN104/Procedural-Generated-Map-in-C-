@@ -36,8 +36,15 @@ public partial class Player : Entity
         globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y), 0, 0);
         globalPhysics.speed = 13f;
         
+        // Stats
         globalStats.MaxHealth = 100;
         globalStats.Health = globalStats.MaxHealth;
+        
+        globalStats.MaxMana = 100;
+        globalStats.Mana = globalStats.MaxMana;
+        
+        //Spell Cooldowns
+        spellCooldowns.fireball = new Cooldown(0.2f);
         
         targetPos = globalPhysics.position;
         
