@@ -19,10 +19,11 @@ public class Slot
         this.cooldown = cooldown;
     }
     
-    public void draw()
+    public void Draw()
     {
         DrawTextureRec(texture, rect, new Vector2(rect.X, rect.Y),Color.White);
-        DrawRectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)(rect.Height * cooldown.getCooldownPercent()), Fade(Color.Black, 0.7f));
+        if (cooldown.getCooldownPercent() < 1)
+            DrawRectangle((int)rect.X, (int)(rect.Y + (rect.Height * (cooldown.getCooldownPercent()))), (int)rect.Width, (int)(rect.Height * (1- cooldown.getCooldownPercent())), Fade(Color.Black, 0.7f));
     }
 }
 
@@ -43,18 +44,15 @@ public class SpellBar
         this.size = size;
         
         //Create each slot
-        slots.Add(new Slot(new Rectangle(position.X + buffer, position.Y + (position.Y - slotSize), slotSize, slotSize), "", player.getSpellCooldowns().fireball));
-        // slots[1] = new Slot(new Rectangle((position.X + buffer*2)*2, position.Y + (position.Y - slotSize), slotSize, slotSize), "");
-        // slots[2] = new Slot(new Rectangle((position.X + buffer*2)*3, position.Y + (position.Y - slotSize), slotSize, slotSize), "");
-        // slots[3] = new Slot(new Rectangle((position.X + buffer*2)*4, position.Y + (position.Y - slotSize), slotSize, slotSize), "");
-        // slots[4] = new Slot(new Rectangle((position.X + buffer*2)*5, position.Y + (position.Y - slotSize), slotSize, slotSize), "");
+        slots.Add(new Slot(new Rectangle(position.X + buffer, position.Y + (size.Y - slotSize)/2, slotSize, slotSize), "Assets/FireballUI.png", player.getSpellCooldowns().fireball));
+        
     }
 
-    public void draw()
+    public void Draw()
     {
         DrawRectangleRec(new Rectangle(position.X, position.Y, size.X, size.Y), Color.DarkGray);
         foreach (Slot slot in slots)
-            slot.draw();
+            slot.Draw();
     }
 
 }

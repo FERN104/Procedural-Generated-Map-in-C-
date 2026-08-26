@@ -33,7 +33,8 @@ public class Enemy : Entity
     public Enemy(MapGrids map) : base(map)
     {
         globalPhysics.Hitbox = new Vector2(100, 100);
-        globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y), Random.Shared.Next(0, (int)(map.mapWidth/map.cellSize)), Random.Shared.Next(0, (int)(map.mapHeight/map.cellSize)));
+        globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y), Random.Shared.Next(0, (int)(map.mapWidth/map.cellSize)), Random.Shared.Next(0, (int)(map.mapHeight/map.cellSize))
+            );
         globalPhysics.speed = 10;
         
         globalStats.MaxHealth = 100;

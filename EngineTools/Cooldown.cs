@@ -19,7 +19,7 @@ public class Cooldown
 
     public double getCooldownPercent()
     {
-        return (cooldown.Elapsed.TotalSeconds / cooldownTime);
+        return Math.Min(cooldown.Elapsed.TotalSeconds / cooldownTime, 1);
     }
 
     public bool isReady()

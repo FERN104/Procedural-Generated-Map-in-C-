@@ -121,41 +121,48 @@ public partial class MapGrids
         
         if (width > cols || height > rows)
             return Vector2.Zero;
-        
-        for (int x = startX; x <= cols - width; x++)
+        while (true)
         {
-            for (int y = startY; y <= rows - height; y++)
+            for (int x = startX; x <= cols - width; x++)
             {
-                bool space = true;
-                
-                for (int ix = 0; ix < width; ix++)
+                for (int y = startY; y <= rows - height; y++)
                 {
-                    if (x + ix >= cols || x + ix < 0)
+                    bool space = true;
+
+                    for (int ix = 0; ix < width; ix++)
                     {
-                        space = false;
-                        break;
-                    }
-                    for (int iy = 0; iy < height; iy++)
-                    {
-                        if (y + iy >= rows || y + iy < 0)
+                        if (x + ix >= cols || x + ix < 0)
                         {
                             space = false;
                             break;
                         }
 
-                        if (!grid[x + ix, y + iy].Walkable)
+                        for (int iy = 0; iy < height; iy++)
                         {
-                            space = false;
-                            break;
+                            if (y + iy >= rows || y + iy < 0)
+                            {
+                                space = false;
+                                break;
+                            }
+
+                            if (!grid[x + ix, y + iy].Walkable)
+                            {
+                                space = false;
+                                break;
+                            }
                         }
+
+                        if (!space) break;
                     }
-                    if (!space) break;
+
+                    if (space)
+                        return new Vector2((x + width / 2f) * cellSize, (y + height / 2f) * cellSize);
                 }
-                if (space)
-                    return new Vector2((x + width / 2f)* cellSize, (y + height /2f) * cellSize);
             }
+            
+            startX = Random.Shared.Next(0, cols);
+            startY = Random.Shared.Next(0, rows);
         }
-        return Vector2.Zero;
     }
 
     public void Draw()

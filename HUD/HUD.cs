@@ -16,7 +16,7 @@ public class HUD
         this.player = player;
         healthBar = new HUD_GLOBE(new Vector2(30, 900), 75f, Color.Red, Color.Gold);
         manaBar = new HUD_GLOBE(new Vector2(60 + 75*2, 900), 75f, Color.DarkBlue, Color.Gold);
-        spellBar = new SpellBar(player, new Vector2(500, 950), new Vector2(500, 100));
+        spellBar = new SpellBar(player, new Vector2(1920f/2f - 250, 950), new Vector2(500, 100));
     }
 
     public void update()
@@ -29,6 +29,6 @@ public class HUD
     {
         healthBar.draw();
         manaBar.draw();
-        spellBar.draw();
+        spellBar.Draw();
     }
 }
