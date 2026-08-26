@@ -28,16 +28,35 @@ public class Enemy : Entity
     private int sightRange = 800;
     private int attackRange = 50;
 
+    private Cooldown animTimer;
     private Cooldown attack;
     
     public Enemy(MapGrids map) : base(map)
     {
+        //Textures
+        
+        //Sheet setup
+        textureVars.spriteSheetSize = new Vector2(256, 128);
+        textureVars.frameColumnCount = 2;
+        textureVars.spriteSheet = TextureManager.loadPathtoText("Assets/Enemy SpriteSheet.png", (int)textureVars.spriteSheetSize.X, (int)textureVars.spriteSheetSize.Y);
+        
+        //Frame Setup
+        textureVars.frameDimensions = new Vector2(128, 128);
+        textureVars.frameRec = new Rectangle(0, 0, textureVars.frameDimensions.X, textureVars.frameDimensions.Y);
+        
+        textureVars.numberOfFrames = 2;
+        textureVars.currentFrame = 0;
+        textureVars.frameTime = 0.1f;
+        animTimer = new Cooldown(textureVars.frameTime);
+        
+        // Physics
         globalPhysics.Hitbox = new Vector2(100, 100);
         globalPhysics.position = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y), Random.Shared.Next(0, (int)(map.mapWidth/map.cellSize)), Random.Shared.Next(0, (int)(map.mapHeight/map.cellSize))
             );
-        globalPhysics.speed = 10;
+        globalPhysics.speed = 6;
         
-        globalStats.MaxHealth = 100;
+        //Stats
+        globalStats.MaxHealth = 20;
         globalStats.Health = globalStats.MaxHealth;
         globalStats.attackDelay = 1f;
         globalStats.damageMultiplier = 1f;
@@ -54,13 +73,50 @@ public class Enemy : Entity
             state = States.DEAD;
         
         CollisionManager.instance.MoveToPoint(this, (dir) => { });
+        
+        isMoving = (globalPhysics.velocity.X != 0 ||
+                    globalPhysics.velocity.Y != 0);   
+        
+        AnimationLoop();
     }
 
     public override void draw()
     {
-        DrawRectangleRec(new Rectangle(globalPhysics.position.X - globalPhysics.Hitbox.X/2, globalPhysics.position.Y - globalPhysics.Hitbox.Y/2, globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y), Color.Red);
+        DrawTexturePro(
+            textureVars.spriteSheet, 
+            textureVars.frameRec, 
+            new Rectangle(globalPhysics.position.X, globalPhysics.position.Y, textureVars.frameRec.Width, textureVars.frameRec.Height), 
+            new Vector2(textureVars.frameRec.Width/2.0f, textureVars.frameRec.Height/2.0f),
+            globalPhysics.rotation,
+            Color.White);
     }
+    
+    private void AnimationLoop()
+    {
+        if (animTimer.isReady() && isMoving)
+        {
+            animTimer.reset();
+            textureVars.currentFrame++;
 
+            if (textureVars.currentFrame >= textureVars.numberOfFrames)
+            {
+                textureVars.currentFrame = 0;
+            }
+            
+            int currentCol = textureVars.currentFrame % textureVars.frameColumnCount;
+            int currentRow = textureVars.currentFrame / textureVars.frameColumnCount;
+            
+            textureVars.frameRec.X = currentCol * textureVars.frameDimensions.X;
+            textureVars.frameRec.Y = currentRow * textureVars.frameDimensions.Y;
+            Console.WriteLine($"Frame Count:{textureVars.currentFrame}");
+        }
+        else if (animTimer.isReady())
+        {
+            textureVars.frameRec.X = 0;
+            textureVars.frameRec.Y = textureVars.frameDimensions.Y;
+        }
+    }
+    
     public void enemyAI(Player player)
     { 
         if (state == States.DEAD) return;
@@ -158,7 +214,6 @@ public class Enemy : Entity
 
         return true;
     }
-    
 
     private void Roaming()
     {
