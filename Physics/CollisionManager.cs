@@ -142,9 +142,12 @@ public class CollisionManager
         float distance = (float)Math.Sqrt(dx * dx + dy * dy);                                                           // Find distance with Pythagoras theorem
 
         // Rotation
-        double radians = (float)Math.Atan2(dy, dx);                                                                     // Atan returns radians
-        physics.rotation = (float)(radians * (180.0 / Math.PI)) + 90;                                             // Convert radians to degrees and add offset
-                                                                                                                        // because our character is facing up
+        if (dx != 0 && dy != 0)
+        {
+            double radians = (float)Math.Atan2(dy, dx); // Atan returns radians
+            physics.rotation = (float)(radians * (180.0 / Math.PI)) + 90; // Convert radians to degrees and add offset
+        }                                                                                                           // because our character is facing up
+
         if (distance > physics.speed)
         {
             spellDirection(new Vector2(dx / distance, dy / distance));

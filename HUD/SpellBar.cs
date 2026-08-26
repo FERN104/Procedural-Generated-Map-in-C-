@@ -21,7 +21,7 @@ public class Slot
     
     public void Draw()
     {
-        DrawTextureRec(texture, rect, new Vector2(rect.X, rect.Y),Color.White);
+        DrawTextureRec(texture, new Rectangle(0, 0, rect.Width, rect.Height), new Vector2(rect.X, rect.Y),Color.White);
         if (cooldown.getCooldownPercent() < 1)
             DrawRectangle((int)rect.X, (int)(rect.Y + (rect.Height * (cooldown.getCooldownPercent()))), (int)rect.Width, (int)(rect.Height * (1- cooldown.getCooldownPercent())), Fade(Color.Black, 0.7f));
     }
