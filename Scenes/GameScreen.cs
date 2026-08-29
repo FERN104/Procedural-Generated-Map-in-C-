@@ -77,7 +77,7 @@ public class GameScreen : Scene
             foreach (Entity e in entities)
                 e.update(GetScreenToWorld2D(GetMousePosition(), camera), grid);
             
-            SpellManager.Instance.update(player, grid);
+            SpellManager.Instance.update(player, grid, camera);
             
             foreach (Enemy e in enemies)
                 e.enemyAI(player);

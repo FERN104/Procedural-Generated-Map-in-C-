@@ -11,14 +11,14 @@ namespace Cs_raylib_test.Entities;
 public partial class Player : Entity
 {
     
-    private void PlayerMovement(Vector2 mousePos, MapGrids map)
+    private void PlayerMovement(Vector2 mousePos)
     {
 
         // Movement
         if (IsMouseButtonDown(SettingsManager.singleInstance.gameSettings.controls.move))
             targetPos = mousePos;                                                                                   // Update the mouse position in the target pos Vector
                                                                                                                     // Only do this when holding left-click
-        CollisionManager.instance.MoveToPoint(this, dir=> SpellDirection = dir);
+        CollisionManager.instance.MoveToPoint(this);
 
         isMoving = (globalPhysics.velocity.X != 0 ||
                     globalPhysics.velocity.Y != 0);                                                                                                 // Updates Animation Boolean flag (tells the animator whether to walk or not)

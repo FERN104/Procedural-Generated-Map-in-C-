@@ -7,6 +7,7 @@ public class FireBeam : Spell
 {
     public FireBeam(Entity caster) : base(caster)
     {
+        
     }
 
     public override void update(MapGrids map)
@@ -16,5 +17,6 @@ public class FireBeam : Spell
 
     public override void draw()
     {
+        
     }
 }

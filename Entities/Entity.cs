@@ -50,7 +50,6 @@ public abstract class Entity
     protected TextureVars textureVars;
     protected SpellCooldowns spellCooldowns;
     protected MapGrids map;
-    public Vector2 oldTarget;
     public Vector2 targetPos;
 
     public ref SpellCooldowns getSpellCooldowns() {return ref spellCooldowns;}

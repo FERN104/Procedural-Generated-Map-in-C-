@@ -72,7 +72,7 @@ public class Enemy : Entity
         if (globalStats.Health <= 0)
             state = States.DEAD;
         
-        CollisionManager.instance.MoveToPoint(this, (dir) => { });
+        CollisionManager.instance.MoveToPoint(this);
         
         isMoving = (globalPhysics.velocity.X != 0 ||
                     globalPhysics.velocity.Y != 0);   

@@ -11,10 +11,7 @@ namespace Cs_raylib_test.Entities;
 public partial class Player : Entity
 {
     private Cooldown animTimer;
-    Vector2 intitSpellVel = Vector2.Zero;
     private bool isMoving = true;
-    private Vector2 SpellDirection = Vector2.Zero;
-    private List<Spell.Spell> spells;
     
     public Player(MapGrids map) : base(map)
     {
@@ -47,15 +44,11 @@ public partial class Player : Entity
         spellCooldowns.fireball = new Cooldown(0.2f);
         
         targetPos = globalPhysics.position;
-        
-        
-        
-        spells = new List<Spell.Spell>();
     }
 
     public override void update(Vector2 mousePos, MapGrids map)
     {
-        PlayerMovement(mousePos, map);
+        PlayerMovement(mousePos);
         AnimationLoop();
     }
 
@@ -69,6 +62,4 @@ public partial class Player : Entity
             globalPhysics.rotation,
             Color.White);
     }
-
-    public Vector2[] getSpellInfo() { return new[] { SpellDirection, globalPhysics.position }; }
 }

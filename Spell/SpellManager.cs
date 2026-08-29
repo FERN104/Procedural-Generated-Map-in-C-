@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Cs_raylib_test.Entities;
 using Cs_raylib_test.MapLogic;
+using Cs_raylib_test.Physics;
 using Cs_raylib_test.Settings;
 using Raylib_cs;
 
@@ -54,7 +55,7 @@ public class SpellManager
         { SettingsManager.singleInstance.gameSettings.controls.Firebeam, (caster, spellPool) => new FireBeam(caster) },
     };
 
-    public void update(Player player, MapGrids map)
+    public void update(Player player, MapGrids map, Camera2D camera)
     {
         KeyboardKey key;
         while ((key = (KeyboardKey)GetKeyPressed()) != KeyboardKey.Null)
@@ -64,8 +65,17 @@ public class SpellManager
                 Spell? spell = spawn(player, spellPools);
                 if (spell != null)
                 {
-                    Vector2[] spellinfo = player.getSpellInfo();
-                    spell.Reset(spellinfo[0], spellinfo[1]);
+                    Vector3 vectInfo = CollisionManager.instance.RotateToPoint(player, GetScreenToWorld2D(GetMousePosition(), camera));
+                    player.targetPos = player.getGlobalPhysics().position; // Stop the player when a spell is cast
+                    
+                    // vect Info Contains
+                    // .X = distance X from position to target
+                    // .Y = distance Y from position to target
+                    // .Z = magnitude / hypotenuse
+                    
+                    Vector2 dir = new Vector2(vectInfo.X / vectInfo.Z, vectInfo.Y / vectInfo.Z); // Vector Normalisation
+                    
+                    spell.Reset(dir, player.getGlobalPhysics().position);
                     activeSpells.Add(spell);
                 }
             }
