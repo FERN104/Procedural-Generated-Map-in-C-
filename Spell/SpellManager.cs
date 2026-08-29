@@ -68,7 +68,7 @@ public class SpellManager
                     Vector3 vectInfo = CollisionManager.instance.RotateToPoint(player, GetScreenToWorld2D(GetMousePosition(), camera));
                     player.targetPos = player.getGlobalPhysics().position; // Stop the player when a spell is cast
                     
-                    // vect Info Contains
+                    // vectInfo Contains
                     // .X = distance X from position to target
                     // .Y = distance Y from position to target
                     // .Z = magnitude / hypotenuse

@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
+using Cs_raylib_test.Engine_Tools;
 using Cs_raylib_test.Entities;
+using Raylib_cs;
 using Rectangle = Raylib_cs.Rectangle;
 
 namespace Cs_raylib_test.MapLogic;
@@ -31,6 +33,8 @@ public partial class MapGrids
     private GridCell[,] grid;
     private List<MapObject> staticMap;
     
+    private Texture2D texture;
+    
     //Choose Which strategy to load
     private int strategy = 2;
     
@@ -59,6 +63,8 @@ public partial class MapGrids
         LoadMap();
         
         dirtyCells = new HashSet<GridCell>();
+        
+        texture = TextureManager.loadPathtoText("Assets/Path.png", 128, 128);
     }
 
     public GridCell? GetCellAtPosition(Vector2 pos)
@@ -167,6 +173,7 @@ public partial class MapGrids
 
     public void Draw()
     {
+        DrawTextureRec(texture, new Rectangle(0, 0, mapWidth, mapHeight), new Vector2(0, 0), Color.White);
         foreach (MapObject obj in staticMap)
         {
             obj.Draw();

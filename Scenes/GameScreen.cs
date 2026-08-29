@@ -116,12 +116,13 @@ public class GameScreen : Scene
     public override void draw()
     {
         BeginMode2D(camera);
+
+        SpellManager.Instance.draw();
+        grid.Draw();
         foreach (Entity e in entities)
         {
             e.draw();
         }
-        SpellManager.Instance.draw();
-        grid.Draw();
         EndMode2D();
         
         pause.draw();
