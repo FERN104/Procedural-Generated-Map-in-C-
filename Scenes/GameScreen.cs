@@ -118,13 +118,14 @@ public class GameScreen : Scene
         BeginMode2D(camera);
 
         SpellManager.Instance.draw();
-        grid.Draw();
+        Vector2 s2W = GetScreenToWorld2D(new Vector2(0, 0), camera);
+        grid.Draw(new Rectangle(s2W.X, s2W.Y, GetScreenWidth(), GetScreenHeight()));
         foreach (Entity e in entities)
         {
             e.draw();
         }
         EndMode2D();
-        
+        DrawFPS(300, 300);
         pause.draw();
         if (isPaused)
         {

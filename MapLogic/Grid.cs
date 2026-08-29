@@ -12,6 +12,7 @@ public class GridCell
     public bool Walkable;
     public char Code;
     public List<Entity> Current_Entities;
+    public MapObject obj;
     public GridCell(Vector2 pos) {
         Position = pos;
         Walkable = false;
@@ -31,7 +32,6 @@ public partial class MapGrids
     
     private HashSet<GridCell> dirtyCells;
     private GridCell[,] grid;
-    private List<MapObject> staticMap;
     
     private Texture2D texture;
     
@@ -40,7 +40,6 @@ public partial class MapGrids
     
     public MapGrids(int width, int height, float cellSize)
     {
-        staticMap = new List<MapObject>();
         mapWidth = width;
         mapHeight = height;
         this.cellSize = cellSize;
@@ -171,13 +170,17 @@ public partial class MapGrids
         }
     }
 
-    public void Draw()
+    public void Draw(Rectangle screenToGame)
     {
         DrawTextureRec(texture, new Rectangle(0, 0, mapWidth, mapHeight), new Vector2(0, 0), Color.White);
-        foreach (MapObject obj in staticMap)
+        
+        
+        foreach (GridCell cell in GetCellsAtRect(screenToGame))
         {
-            obj.Draw();
+            if (cell.obj != null)
+                cell.obj.Draw();
         }
+        
     }
 
     public ref HashSet<GridCell> GetDirtyCells()
@@ -192,8 +195,8 @@ public partial class MapGrids
         foreach (GridCell cell in grid)
         {
             var obj = decodeSymbol[cell.Code](new Rectangle(cell.Position.X, cell.Position.Y, cellSize, cellSize));
-            if (obj == null) continue;
-            staticMap.Add(obj);
+
+            if (obj != null) cell.obj = obj;
         }
     }
 
