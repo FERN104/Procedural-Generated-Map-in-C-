@@ -17,13 +17,12 @@ public class GameScreen : Scene
     private Buttons pause;
 
     private Player player;
-    private Enemy enemy;
+    private EnemySpawner enemySpawner;
     
     MapGrids grid;
     CollisionManager collisionManager;
     
     List<Entity> entities;
-    List<Enemy> enemies;
 
     private HUD hud;
     private Camera2D camera;
@@ -31,10 +30,9 @@ public class GameScreen : Scene
     public GameScreen()
     {
         entities = new List<Entity>(); // Initialise the list
-        enemies = new List<Enemy>();
         
         /* Map */
-        grid = new MapGrids(1920*5, 1080*5, 4); // Create The grid the map is on
+        grid = new MapGrids(1920*4, 1080*4, 8); // Create The grid the map is on
         collisionManager = new CollisionManager(grid);
         
         /* Menu Objects */
@@ -47,9 +45,7 @@ public class GameScreen : Scene
         player = new Player(grid);
         entities.Add(player); // Add the player object so the map knows it exists
 
-        enemy = new Enemy(grid);
-        entities.Add(enemy);
-        enemies.Add(enemy);
+        enemySpawner = new EnemySpawner(5, true, entities, grid);
         
         // Camera && HUD
         hud = new HUD(player);
@@ -79,8 +75,7 @@ public class GameScreen : Scene
             
             SpellManager.Instance.update(player, grid, camera);
             
-            foreach (Enemy e in enemies)
-                e.enemyAI(player);
+            enemySpawner.update(player);
             hud.update();
             pause.update();
             if (pause.getIsClicked())
@@ -88,8 +83,6 @@ public class GameScreen : Scene
                 isPaused = true;
                 pause.setIsClicked(false);
             }
-            entities.RemoveAll(e => !e.Alive());
-            enemies.RemoveAll(e => !e.Alive());
             
             grid.UpdateCells(entities); // While the game is active update the map grid
             

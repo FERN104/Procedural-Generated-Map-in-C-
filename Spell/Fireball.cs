@@ -44,6 +44,9 @@ public class Fireball : Spell
             if (entity == null) continue;
             if (entity == caster) continue;
             entity.Damage(damage);
+            if (!entity.Alive() && caster is Player player)
+                player.getGameStats().kills += 1;
+                
             isAlive = false;
         }
     }

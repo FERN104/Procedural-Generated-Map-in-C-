@@ -8,13 +8,21 @@ using Cs_raylib_test.Settings;
 
 namespace Cs_raylib_test.Entities;
 
+public struct GameStats
+{
+    public int kills;
+    public int collectedCoins;
+}
+
 public partial class Player : Entity
 {
     private Cooldown animTimer;
     private bool isMoving = true;
-    
+    private GameStats gameStats;
     public Player(MapGrids map) : base(map)
     {
+        gameStats = new GameStats();
+        
         // Load all textures on initialisaton
         textureVars.spriteSheetSize = new Vector2(208, 216);
         textureVars.frameColumnCount = 2;
@@ -50,6 +58,11 @@ public partial class Player : Entity
     {
         PlayerMovement(mousePos);
         AnimationLoop();
+    }
+
+    public ref GameStats getGameStats()
+    {
+        return ref gameStats;
     }
 
     public override void draw()
