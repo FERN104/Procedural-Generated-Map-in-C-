@@ -151,10 +151,6 @@ public class CollisionManager
             // Collisions
             CheckCollision(self);
         }
-        else
-        {
-            physics.position = self.targetPos; // close enough so smoothly snap
-        }
     }
 
     public Vector3 RotateToPoint(Entity self, Vector2 targetPos)
