@@ -34,7 +34,7 @@ public class GameScreen : Scene
         enemies = new List<Enemy>();
         
         /* Map */
-        grid = new MapGrids(1920*3, 1080*3, 8); // Create The grid the map is on
+        grid = new MapGrids(1920*5, 1080*5, 4); // Create The grid the map is on
         collisionManager = new CollisionManager(grid);
         
         /* Menu Objects */
@@ -116,10 +116,9 @@ public class GameScreen : Scene
     public override void draw()
     {
         BeginMode2D(camera);
-
-        SpellManager.Instance.draw();
         Vector2 s2W = GetScreenToWorld2D(new Vector2(0, 0), camera);
         grid.Draw(new Rectangle(s2W.X, s2W.Y, GetScreenWidth(), GetScreenHeight()));
+        SpellManager.Instance.draw();
         foreach (Entity e in entities)
         {
             e.draw();
