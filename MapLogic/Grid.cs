@@ -204,6 +204,6 @@ public partial class MapGrids
     {
         {'#', (rect) => new Wall(rect)},
         {'*', (rect) => new Wall(rect)},
-        {'.', (rect) => null},
+        {'.', (rect) => new Path(rect)},
     };
 }
