@@ -74,6 +74,7 @@ public class CollisionManager
         {
             physics.position.X = targetSnapX;
             physics.velocity.X = 0;
+            entity.targetPos = physics.position;
         }
         else
         {
@@ -124,6 +125,7 @@ public class CollisionManager
         {
             physics.position.Y = targetSnapY;
             physics.velocity.Y = 0;
+            entity.targetPos = physics.position;
         }
         else
         {

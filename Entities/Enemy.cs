@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Numerics;
-using System.Runtime.InteropServices;
+﻿using System.Numerics;
 using Cs_raylib_test.Engine_Tools;
 using Cs_raylib_test.MapLogic;
 using Cs_raylib_test.Physics;
@@ -27,6 +25,8 @@ public class Enemy : Entity
 
     private int sightRange = 800;
     private int attackRange = 50;
+    
+    private int patrolRadius = 500;
 
     private Cooldown animTimer;
     private Cooldown attack;
@@ -132,10 +132,10 @@ public class Enemy : Entity
             if (ClearLineOfSight(globalPhysics.position, player.getGlobalPhysics().position))
                 state = States.TARGETING;
             else
-                state = States.IDLE;
+                state = States.ROAMING;
         }
         
-        else state = States.IDLE;
+        else state = States.ROAMING;
         
         switch (state) // What state are we in? What do we do?
         {
@@ -217,6 +217,17 @@ public class Enemy : Entity
 
     private void Roaming()
     {
-        
+        if (targetPos == globalPhysics.position)
+        {
+            Rectangle patrolSquare = new Rectangle(globalPhysics.position.X - patrolRadius,
+                globalPhysics.position.Y - patrolRadius, globalPhysics.position.X + patrolRadius,
+                globalPhysics.position.Y + patrolRadius);
+            
+            targetPos = map.findEmptyGrid(new Vector2(globalPhysics.Hitbox.X, globalPhysics.Hitbox.Y),
+                Math.Clamp((int)Random.Shared.Next((int)(patrolSquare.X), (int)(patrolSquare.Width)), 0,
+                    (int)(map.mapWidth)),
+                Math.Clamp((int)Random.Shared.Next((int)(patrolSquare.Y), (int)(patrolSquare.Height)), 0,
+                    (int)(map.mapHeight)));
+        }
     }
 }
