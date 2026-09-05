@@ -153,6 +153,10 @@ public class CollisionManager
             // Collisions
             CheckCollision(self);
         }
+        else
+        {
+            self.targetPos = physics.position;
+        }
     }
 
     public Vector3 RotateToPoint(Entity self, Vector2 targetPos)
