@@ -9,6 +9,7 @@ namespace Cs_raylib_test.Spell;
 
 public class SpellPools
 {
+    public Stack<Spell> lightningbolt = new();
     public Stack<Spell> fireball = new();
     public Stack<Spell> firebeam = new();
     
@@ -49,6 +50,19 @@ public class SpellManager
                         return spellPool.fireball.Pop();
                     else
                         return new Fireball(caster);
+                return null;
+            }
+        },
+        {
+            SettingsManager.singleInstance.gameSettings.controls.LightningBolt, (caster, spellPool) =>
+            
+            {
+                if (caster.getSpellCooldowns().LightningBolt.isReady())
+                    
+                    if (spellPool.lightningbolt.Count > 0)
+                        return spellPool.lightningbolt.Pop();
+                    else
+                        return new LightningBolt(caster);
                 return null;
             }
         },

@@ -12,10 +12,14 @@ public class CharacterInput
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public KeyboardKey Firebeam { get; set; }
     
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public KeyboardKey LightningBolt { get; set; }
+    
     public CharacterInput()
     {
         move = MouseButton.Left;
         fireball = KeyboardKey.W;
+        LightningBolt = KeyboardKey.Q;
     }
 
     public CharacterInput(MouseButton move, KeyboardKey fireball)

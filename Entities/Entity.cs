@@ -41,6 +41,7 @@ public struct SpellCooldowns
 {
     public Cooldown fireball;
     public Cooldown fireBeam;
+    public Cooldown LightningBolt;
 }
 
 public abstract class Entity

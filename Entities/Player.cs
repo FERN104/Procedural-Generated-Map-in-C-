@@ -50,6 +50,7 @@ public partial class Player : Entity
         
         //Spell Cooldowns
         spellCooldowns.fireball = new Cooldown(0.2f);
+        spellCooldowns.LightningBolt = new Cooldown(0.3f);
         
         targetPos = globalPhysics.position;
     }
