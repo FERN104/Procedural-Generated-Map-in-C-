@@ -12,14 +12,15 @@ public class Fireball : Spell
     private Vector2 startpos;
     private Vector2 position;
     private Vector2 velocity;
-    private float speed = 100f;
-    private float radius = 5f;
+    private float speed = 15f;
+    private float radius = 7f;
     private float range = 400f;
 
     public Fireball(Entity caster) : base(caster)
     {
         caster.getSpellCooldowns().fireball.reset();
         damage = 10;
+        color = Color.Orange;
     }
 
     public override void update(MapGrids map)
@@ -49,11 +50,13 @@ public class Fireball : Spell
                 
             isAlive = false;
         }
+        
+        ParticleManager.Instance.spawn(position, color);
     }
 
     public override void draw()
     {
-        DrawCircle((int)position.X, (int)position.Y, radius, Color.Orange);
+        DrawCircle((int)position.X, (int)position.Y, radius, color);
     }
 
     public override void Reset(Vector2 dir, Vector2 pos)

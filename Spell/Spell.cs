@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using Raylib_cs;
+using System.Numerics;
 using Cs_raylib_test.Entities;
 using Cs_raylib_test.MapLogic;
 
@@ -9,6 +10,7 @@ public abstract class Spell
     public bool isAlive = true;
     protected int damage;
     protected Entity caster;
+    public Color color;
     
     
     public Spell(Entity entity)

@@ -12,8 +12,8 @@ public class LightningBolt : Spell
     private Vector2 startpos;
     private Vector2 position;
     private Vector2 velocity;
-    private float speed = 200f;
-    private float radius = 5f;
+    private float speed = 100f;
+    private float radius = 7f;
     private float range = 400f;
     private float chainRadius = 300f;
     private int maxChains = 5;
@@ -24,6 +24,7 @@ public class LightningBolt : Spell
     {
         caster.getSpellCooldowns().LightningBolt.reset();
         damage = 10;
+        color = Color.Blue;
     }
 
     public override void update(MapGrids map)
@@ -56,11 +57,12 @@ public class LightningBolt : Spell
             if (currentChain > maxChains)
                 isAlive = false;
         }
+        ParticleManager.Instance.spawn(position, color);
     }
 
     public override void draw()
     {
-        DrawCircle((int)position.X, (int)position.Y, radius, Color.Blue);
+        DrawCircle((int)position.X, (int)position.Y, radius, color);
     }
 
     public override void Reset(Vector2 dir, Vector2 pos)

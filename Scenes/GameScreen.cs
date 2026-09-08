@@ -74,6 +74,7 @@ public class GameScreen : Scene
                 e.update(GetScreenToWorld2D(GetMousePosition(), camera), grid);
             
             SpellManager.Instance.update(player, grid, camera);
+            ParticleManager.Instance.update();
             
             enemySpawner.update(player);
             hud.update();
@@ -112,6 +113,7 @@ public class GameScreen : Scene
         Vector2 s2W = GetScreenToWorld2D(new Vector2(0, 0), camera);
         grid.Draw(new Rectangle(s2W.X, s2W.Y, GetScreenWidth(), GetScreenHeight()));
         SpellManager.Instance.draw();
+        ParticleManager.Instance.draw();
         foreach (Entity e in entities)
         {
             e.draw();
