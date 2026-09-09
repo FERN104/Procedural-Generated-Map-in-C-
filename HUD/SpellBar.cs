@@ -44,8 +44,8 @@ public class SpellBar
         this.size = size;
         
         //Create each slot
-        slots.Add(new Slot(new Rectangle(position.X + buffer, position.Y + (size.Y - slotSize)/2, slotSize, slotSize), "Assets/FireballUI.png", player.getSpellCooldowns().fireball));
-        
+        slots.Add(new Slot(new Rectangle(position.X + buffer, position.Y + (size.Y - slotSize)/2, slotSize, slotSize), "", player.getSpellCooldowns().LightningBolt));
+        slots.Add(new Slot(new Rectangle(position.X + buffer + buffer*4, position.Y + (size.Y - slotSize)/2, slotSize, slotSize), "Assets/FireballUI.png", player.getSpellCooldowns().fireball));
     }
 
     public void Draw()
